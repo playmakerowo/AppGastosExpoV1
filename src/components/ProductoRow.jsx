@@ -1,0 +1,95 @@
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { formatCLP } from '../utils/calculos';
+
+export default function ProductoRow({ producto, onChange }) {
+  const { nombre, cantidad, precio_unitario } = producto;
+  const montoReal = (parseInt(cantidad) || 0) * (parseInt(precio_unitario) || 0);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.nombre} numberOfLines={1}>{nombre}</Text>
+      <View style={styles.inputs}>
+        <View style={styles.campo}>
+          <Text style={styles.label}>Cant.</Text>
+          <TextInput
+            style={styles.input}
+            value={String(cantidad)}
+            keyboardType="numeric"
+            onChangeText={(v) => onChange({ ...producto, cantidad: v })}
+          />
+        </View>
+        <Text style={styles.mult}>×</Text>
+        <View style={styles.campo}>
+          <Text style={styles.label}>Precio</Text>
+          <TextInput
+            style={styles.input}
+            value={String(precio_unitario)}
+            keyboardType="numeric"
+            onChangeText={(v) => onChange({ ...producto, precio_unitario: v })}
+          />
+        </View>
+        <View style={styles.total}>
+          <Text style={styles.label}>Total</Text>
+          <Text style={styles.totalValor}>{formatCLP(montoReal)}</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.04,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  nombre: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1e293b',
+    marginBottom: 8,
+  },
+  inputs: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  campo: {
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 10,
+    color: '#94a3b8',
+    marginBottom: 2,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    width: 70,
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#1e293b',
+  },
+  mult: {
+    fontSize: 16,
+    color: '#94a3b8',
+    marginTop: 12,
+  },
+  total: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  totalValor: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#0f172a',
+  },
+});

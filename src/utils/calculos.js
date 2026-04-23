@@ -1,0 +1,58 @@
+// Formato pesos chilenos: 180000 → "$180.000"
+export function formatCLP(valor) {
+  const num = parseInt(valor) || 0;
+  return new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP',
+    minimumFractionDigits: 0,
+  }).format(num);
+}
+
+// Calcula monto real de un producto
+export function calcularMontoReal(cantidad, precio_unitario) {
+  const c = parseInt(cantidad) || 0;
+  const p = parseInt(precio_unitario) || 0;
+  return c * p;
+}
+
+// Retorna true si está sobre el presupuesto
+export function estasobrePresupuesto(monto_real, monto_esperado) {
+  return parseInt(monto_real) > parseInt(monto_esperado);
+}
+
+// Resumen total de un periodo
+export function calcularTotales(resumenCategorias) {
+  return resumenCategorias.reduce(
+    (acc, cat) => {
+      acc.totalEsperado += parseInt(cat.monto_esperado) || 0;
+      acc.totalReal += parseInt(cat.monto_real) || 0;
+      return acc;
+    },
+    { totalEsperado: 0, totalReal: 0 }
+  );
+}
+
+// Porcentaje usado del presupuesto
+export function porcentajeUso(monto_real, monto_esperado) {
+  if (!monto_esperado || monto_esperado === 0) return 0;
+  return Math.min((monto_real / monto_esperado) * 100, 100);
+}
+
+// Mes legible: "2026-05" → "Mayo 2026"
+export function formatMes(mes) {
+  if (!mes) return '';
+  const [anio, m] = mes.split('-');
+  const nombres = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
+  ];
+  return `${nombres[parseInt(m) - 1]} ${anio}`;
+}
+
+// Mes actual en formato "YYYY-MM"
+export function mesActual() {
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+  return `${anio}-${mes}`;
+}
