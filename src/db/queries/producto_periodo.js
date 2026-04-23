@@ -131,19 +131,19 @@ export function obtenerResumenCategorias(periodo_id) {
   try {
     const result = db.getAllSync(
       `SELECT
-         c.id AS categoria_id,
-         c.nombre AS categoria,
-         c.icono,
-         cp.monto_esperado,
-         COALESCE(SUM(pp.cantidad * pp.precio_unitario), 0) AS monto_real
-       FROM categorias c
-       LEFT JOIN categoria_periodo cp
-         ON cp.categoria_id = c.id AND cp.periodo_id = ?
-       LEFT JOIN productos p ON p.categoria_id = c.id
-       LEFT JOIN producto_periodo pp
-         ON pp.producto_id = p.id AND pp.periodo_id = ?
-       GROUP BY c.id`,
-      [periodo_id, periodo_id]
+     c.id AS categoria_id,
+     c.nombre AS categoria,
+     c.icono,
+     cp.monto_esperado,
+     COALESCE(SUM(pp.cantidad * pp.precio_unitario), 0) AS monto_real
+   FROM categoria_periodo cp
+   JOIN categorias c ON c.id = cp.categoria_id
+   LEFT JOIN productos p ON p.categoria_id = c.id
+   LEFT JOIN producto_periodo pp
+     ON pp.producto_id = p.id AND pp.periodo_id = cp.periodo_id
+   WHERE cp.periodo_id = ?
+   GROUP BY c.id, cp.monto_esperado, c.nombre, c.icono`,
+      [periodo_id]
     );
 
     console.log('[obtenerResumenCategorias] COUNT', result.length);

@@ -40,7 +40,7 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
                   onPress={() => {
                     console.log("agregar categoria:"+item.nombre+" Periodo:"+periodo_id);
                     
-                    unirCategoriaPeriodo(item, periodo_id);
+                    unirCategoriaPeriodo(item.id, periodo_id);
                     setModalVisible(false);
 
                     if (onCategoriaAgregada) {
