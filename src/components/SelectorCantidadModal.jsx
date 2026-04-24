@@ -72,11 +72,17 @@ export default function SelectorCantidadModal({ value, onChange, esDinero }) {
               </TouchableOpacity>
             </View>
             <View style={styles.fila}>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-1000)}>
-                <Text style={styles.btnText}>-1000</Text>
+              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-100000)}>
+                <Text style={styles.btnText}>-100k</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(1000)}>
-                <Text style={styles.btnText}>+1000</Text>
+              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-10000)}>
+                <Text style={styles.btnText}>-10k</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn} onPress={() => ajustar(10000)}>
+                <Text style={styles.btnText}>+10k</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn} onPress={() => ajustar(100000)}>
+                <Text style={styles.btnText}>+100k</Text>
               </TouchableOpacity>
             </View>
 
@@ -138,7 +144,7 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: '#6366f1',
     paddingVertical: 14,
-    paddingHorizontal: 18,
+    paddingHorizontal: 12,
     borderRadius: 10,
     minWidth: 60,
     alignItems: 'center',

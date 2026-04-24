@@ -60,7 +60,7 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
               style={styles.button}
               onPress={crearNuevoProducto}
             >
-              <Text style={styles.buttonText}>Nueva producto</Text>
+              <Text style={styles.buttonText}>Nuevo producto</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -80,7 +80,7 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
 function crearNuevoProducto() {
   Alert.alert(
     'Crear Nuevo Producto',
-    `¿Crear nueva Producto?`,
+    `¿Crear Nuevo Producto?`,
     [
       { text: 'Cancelar', style: 'cancel' },
       {
@@ -89,7 +89,6 @@ function crearNuevoProducto() {
     ]
   );
 }
-
 
 const styles = StyleSheet.create({
   modalOverlay: {

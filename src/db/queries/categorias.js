@@ -40,7 +40,6 @@ export function actualizarMontoEsperadoCategoria(categoria_id, periodo_id, monto
 export function obtenerGastoEsperado(categoria_id, periodo_id) {
   const db = getDB();
 
-  console.log("[obtenerGastoEsperado] CATEGORIA:",categoria_id," PERIODO:", periodo_id)
   const row = db.getFirstSync(
     'SELECT monto_esperado FROM categoria_periodo WHERE categoria_id = ? AND periodo_id = ?',
     [categoria_id, periodo_id]

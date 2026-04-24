@@ -37,23 +37,20 @@ export default function CategoriaScreen() {
     );
     setEditados(prev => ({ ...prev, [productoActualizado.id]: true }));
 
-    guardarTodo();
+    guardarProducto(productoActualizado);
   }
 
-  function guardarTodo() {
+  function guardarProducto(p) {
     try {
-      productos.forEach(p => {
-        if (editados[p.id]) {
-          actualizarProductoPeriodo(
-            p.id,
-            parseInt(p.cantidad) || 0,
-            parseInt(p.precio_unitario) || 0,
-            parseInt(p.monto_esperado) || 0
-          );
-        }
-      });
+      console.log("[guardarProducto] productos a guardar", productos);
+      actualizarProductoPeriodo(
+        p.id,
+        parseInt(p.cantidad) || 0,
+        parseInt(p.precio_unitario) || 0,
+        parseInt(p.monto_esperado) || 0
+      );
       setEditados({});
-      Toast.show({ type: 'success', text1: 'Cambios guardados' });
+      Toast.show({ type: 'success', text1: 'Cambios guardados producto: '+p.nombre });
     } catch (e) {
       Toast.show({ type: 'error', text1: 'No se pudo guardar' });
     }

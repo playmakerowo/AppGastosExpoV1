@@ -10,6 +10,7 @@ import { formatCLP, formatMes, mesActual } from '../src/utils/calculos';
 import ResumenItem from '../src/components/ResumenItem';
 import Categorias from '../src/components/Categorias';
 import { obtenerGastoEsperadoTodasCategorias, obtenerGastoTodasCategorias } from '../src/db/queries/categorias';
+import Toast from 'react-native-toast-message';
 
 
 export default function HomeScreen() {
@@ -141,7 +142,7 @@ export default function HomeScreen() {
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Restante</Text>
-          <Text style={styles.totalValor}>{formatCLP(totalIngresos-totalGastado)}</Text>
+          <Text style={styles.totalValor}>{formatCLP(totalIngresos - totalGastado)}</Text>
         </View>
       </View>
 
@@ -166,6 +167,7 @@ export default function HomeScreen() {
         }
       />
       <Categorias periodo_id={periodo?.id} onCategoriaAgregada={cargarResumen} />
+      <Toast position='bottom' bottomOffset={50} onPress={() => Toast.hide()} />
     </SafeAreaView>
   );
 }
