@@ -33,7 +33,7 @@ export function obtenerGastoEsperado(categoria_id, periodo_id) {
   const db = getDB();
 
   const row = db.getFirstSync(
-    'SELECT monto_esperado FROM categoria_periodo WHERE categoria_id = ? AND periodo_id = ? AND activo = 1`',
+    'SELECT monto_esperado FROM categoria_periodo WHERE categoria_id = ? AND periodo_id = ? AND activo = 1',
     [categoria_id, periodo_id]
   );
 

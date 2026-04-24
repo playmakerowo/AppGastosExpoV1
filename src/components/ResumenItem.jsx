@@ -42,7 +42,6 @@ export default function ResumenItem({ categoria, onPress, periodo_id, onEliminad
             <>
               <Text style={styles.separador}>/</Text>
               <Text style={styles.esperado}>{formatCLP(monto_esperado)}</Text>
-              <Text style={styles.estado}>{sobre ? '🔴' : '🟢'}</Text>
             </>
           )}
         </View>
