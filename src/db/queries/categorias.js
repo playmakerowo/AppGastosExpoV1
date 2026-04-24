@@ -64,3 +64,20 @@ export function obtenerGastoEsperadoTodasCategorias(periodo_id) {
   console.log("[obtenerGastoEsperadoTodasCategorias] estimado:", rows[0]?.total ?? 0);
   return rows[0]?.total ?? 0;
 }
+
+export function obtenerGastoTodasCategorias(periodo_id) {
+  const db = getDB();
+
+  console.log("[obtenerGastoTodasCategorias] PERIODO:", periodo_id);
+
+  const rows = db.getAllSync(
+    `SELECT SUM(pp.cantidad * pp.precio_unitario) as total
+     FROM producto_periodo pp
+     JOIN productos p ON p.id = pp.producto_id
+     WHERE pp.periodo_id = ? AND p.categoria_id != 1`,
+    [periodo_id]
+  );
+
+  console.log("[obtenerGastoTodasCategorias] total:", rows[0]?.total ?? 0);
+  return rows[0]?.total ?? 0;
+}

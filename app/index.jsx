@@ -9,7 +9,7 @@ import { seedData } from '../src/utils/seedData';
 import { formatCLP, calcularTotales, formatMes, mesActual } from '../src/utils/calculos';
 import ResumenItem from '../src/components/ResumenItem';
 import Categorias from '../src/components/Categorias';
-import { obtenerGastoEsperadoTodasCategorias } from '../src/db/queries/categorias';
+import { obtenerGastoEsperadoTodasCategorias, obtenerGastoTodasCategorias } from '../src/db/queries/categorias';
 
 
 export default function HomeScreen() {
@@ -20,6 +20,7 @@ export default function HomeScreen() {
   const [totales, setTotales] = useState({ totalEsperado: 0, totalReal: 0 });
   const [totalIngresos, setTotalIngresos] = useState(0);
   const [totalEstimado, setTotalEstimado] = useState(0);
+  const [totalGastado, setTotalGastado] = useState(0);
 
   const inicializado = useRef(false);
   const periodoIdxRef = useRef(0);
@@ -73,9 +74,11 @@ export default function HomeScreen() {
     setResumen(datos);
     setTotales(calcularTotales(conDatos));
 
-    setTotalEstimado(obtenerGastoEsperadoTodasCategorias(periodo_id));
     const ingresos = datos.find(d => d.categoria_id === 1);
     setTotalIngresos(ingresos?.monto_real ?? 0);
+
+    setTotalEstimado(obtenerGastoEsperadoTodasCategorias(periodo_id));
+    setTotalGastado(obtenerGastoTodasCategorias(periodo_id));
   }
 
   function irAnterior() {
@@ -136,16 +139,12 @@ export default function HomeScreen() {
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Gastado</Text>
-          <Text style={[styles.totalValor, totales.totalReal > totales.totalEsperado && styles.rojo]}>
-            {formatCLP(0)}
-          </Text>
+          <Text style={styles.totalValor}>{formatCLP(totalGastado)}</Text>
         </View>
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Restante</Text>
-          <Text style={[styles.totalValor, totales.totalEsperado - totales.totalReal < 0 && styles.rojo]}>
-            {formatCLP(0)}
-          </Text>
+          <Text style={styles.totalValor}>{formatCLP(totalEstimado-totalGastado)}</Text>
         </View>
       </View>
 
