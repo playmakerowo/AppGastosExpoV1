@@ -144,7 +144,7 @@ export default function HomeScreen() {
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Restante</Text>
-          <Text style={styles.totalValor}>{formatCLP(totalEstimado-totalGastado)}</Text>
+          <Text style={styles.totalValor}>{formatCLP(totalGastado-totalEstimado)}</Text>
         </View>
       </View>
 
@@ -174,7 +174,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f8fafc' },
+  safe: { flex: 1, backgroundColor: '#d7dbdf' },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
