@@ -49,7 +49,7 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
                     }
                   }}
                 >
-                  <Text>{item.nombre}</Text>
+                  <Text>{item.icono} {item.nombre}</Text>
                 </TouchableOpacity>
               )}
               ListEmptyComponent={

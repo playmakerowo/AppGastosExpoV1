@@ -8,9 +8,9 @@ import { crearHogar, obtenerHogares } from '../src/db/queries/hogares';
 import { seedData } from '../src/utils/seedData';
 import { formatCLP, formatMes, mesActual } from '../src/utils/calculos';
 import ResumenItem from '../src/components/ResumenItem';
-import Categorias from '../src/components/Categorias';
 import { obtenerGastoEsperadoTodasCategorias, obtenerGastoTodasCategorias } from '../src/db/queries/categorias';
 import Toast from 'react-native-toast-message';
+import CategoriasModal from '../src/components/CategoriasModal';
 
 
 export default function HomeScreen() {
@@ -152,6 +152,8 @@ export default function HomeScreen() {
         renderItem={({ item }) => (
           <ResumenItem
             categoria={item}
+            periodo_id={periodo?.id}
+            onEliminado={() => cargarResumen(periodo?.id)}
             onPress={() => router.push(
               `/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`
             )}
@@ -166,7 +168,7 @@ export default function HomeScreen() {
           </View>
         }
       />
-      <Categorias periodo_id={periodo?.id} onCategoriaAgregada={cargarResumen} />
+      <CategoriasModal periodo_id={periodo?.id} onCategoriaAgregada={cargarResumen} />
       <Toast position='bottom' bottomOffset={50} onPress={() => Toast.hide()} />
     </SafeAreaView>
   );

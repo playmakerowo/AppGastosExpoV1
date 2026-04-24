@@ -56,6 +56,7 @@ export async function initDB() {
       categoria_id INTEGER,
       periodo_id INTEGER,
       monto_esperado INTEGER DEFAULT 0,
+      activo INTEGER DEFAULT 1,
       FOREIGN KEY (categoria_id) REFERENCES categorias(id),
       FOREIGN KEY (periodo_id) REFERENCES periodos(id)
       UNIQUE (categoria_id, periodo_id) 

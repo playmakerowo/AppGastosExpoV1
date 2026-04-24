@@ -16,21 +16,13 @@ export function obtenerCategorias() {
   );
 }
 
-export function unirCategoriaPeriodo(categoria_id, periodo_id) {
-  const db = getDB();
-  db.runSync(
-    'INSERT INTO categoria_periodo (categoria_id, periodo_id, monto_esperado) VALUES (?, ?, 0)',
-    [categoria_id, periodo_id]
-  );
-}
-
 export function actualizarMontoEsperadoCategoria(categoria_id, periodo_id, monto_esperado) {
   const db = getDB();
 
   const result = db.runSync(
     `UPDATE categoria_periodo 
      SET monto_esperado = ? 
-     WHERE categoria_id = ? AND periodo_id = ?`,
+     WHERE categoria_id = ? AND periodo_id = ? `,
     [monto_esperado, categoria_id, periodo_id]
   );
 
@@ -41,7 +33,7 @@ export function obtenerGastoEsperado(categoria_id, periodo_id) {
   const db = getDB();
 
   const row = db.getFirstSync(
-    'SELECT monto_esperado FROM categoria_periodo WHERE categoria_id = ? AND periodo_id = ?',
+    'SELECT monto_esperado FROM categoria_periodo WHERE categoria_id = ? AND periodo_id = ? AND activo = 1`',
     [categoria_id, periodo_id]
   );
 
@@ -56,7 +48,7 @@ export function obtenerGastoEsperadoTodasCategorias(periodo_id) {
   const rows = db.getAllSync(
     `SELECT SUM(monto_esperado) as total 
      FROM categoria_periodo 
-     WHERE periodo_id = ? AND categoria_id != 1`,
+     WHERE periodo_id = ? AND categoria_id != 1 AND activo = 1`,
     [periodo_id]
   );
 
@@ -66,17 +58,46 @@ export function obtenerGastoEsperadoTodasCategorias(periodo_id) {
 
 export function obtenerGastoTodasCategorias(periodo_id) {
   const db = getDB();
-
   console.log("[obtenerGastoTodasCategorias] PERIODO:", periodo_id);
 
   const rows = db.getAllSync(
     `SELECT SUM(pp.cantidad * pp.precio_unitario) as total
      FROM producto_periodo pp
      JOIN productos p ON p.id = pp.producto_id
-     WHERE pp.periodo_id = ? AND p.categoria_id != 1`,
+     JOIN categoria_periodo cp ON cp.categoria_id = p.categoria_id AND cp.periodo_id = pp.periodo_id
+     WHERE pp.periodo_id = ? AND p.categoria_id != 1 AND cp.activo = 1`,
     [periodo_id]
   );
 
-  console.log("[obtenerGastoTodasCategorias] total:", rows[0]?.total ?? 0);
   return rows[0]?.total ?? 0;
+}
+
+// En vez de DELETE, desactiva
+export function quitarCategoriaPeriodo(categoria_id, periodo_id) {
+  const db = getDB();
+  db.runSync(
+    'UPDATE categoria_periodo SET activo = 0 WHERE categoria_id = ? AND periodo_id = ?',
+    [categoria_id, periodo_id]
+  );
+}
+
+// Al volver a agregar, reactiva
+export function unirCategoriaPeriodo(categoria_id, periodo_id) {
+  const db = getDB();
+  const existe = db.getFirstSync(
+    'SELECT id FROM categoria_periodo WHERE categoria_id = ? AND periodo_id = ?',
+    [categoria_id, periodo_id]
+  );
+
+  if (existe) {
+    db.runSync(
+      'UPDATE categoria_periodo SET activo = 1 WHERE categoria_id = ? AND periodo_id = ?',
+      [categoria_id, periodo_id]
+    );
+  } else {
+    db.runSync(
+      'INSERT INTO categoria_periodo (categoria_id, periodo_id, monto_esperado, activo) VALUES (?, ?, 0, 1)',
+      [categoria_id, periodo_id]
+    );
+  }
 }

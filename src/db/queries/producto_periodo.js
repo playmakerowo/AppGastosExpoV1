@@ -134,7 +134,7 @@ export function obtenerResumenCategorias(periodo_id) {
    LEFT JOIN productos p ON p.categoria_id = c.id
    LEFT JOIN producto_periodo pp
      ON pp.producto_id = p.id AND pp.periodo_id = cp.periodo_id
-   WHERE cp.periodo_id = ?
+   WHERE cp.periodo_id = ? AND cp.activo = 1
    GROUP BY c.id, cp.monto_esperado, c.nombre, c.icono`,
       [periodo_id]
     );
