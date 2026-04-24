@@ -1,10 +1,10 @@
 import { getDB } from '../database';
 
-export function crearCategorias(id, nombre, icono) {
+export function crearCategoria(nombre, icono) {
   const db = getDB();
   const result = db.runSync(
-    'INSERT INTO Categorias (id, mes, icono) VALUES (?, ?)',
-    [id, nombre, icono]
+    'INSERT INTO categorias (nombre, icono) VALUES (?, ?)',
+    [nombre, icono]
   );
   return result.lastInsertRowId;
 }

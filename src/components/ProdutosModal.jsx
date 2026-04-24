@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { obtenerProductos } from '../db/queries/productos';
 import { agregarProductoPeriodo } from '../db/queries/producto_periodo';
 import NuevoProductoModal from './NuevoProductoModal';
+import Toast from 'react-native-toast-message';
 
 export default function ProductosModal({ categoria_id, periodo_id, onProductoAgregado }) {
   const [productos, setProductos] = useState([]);
@@ -41,11 +42,14 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
                   style={styles.item}
                   onPress={() => {
                     try {
-                      agregarProductoPeriodo(item.id, parseInt(periodo_id), 1, 1, 1);
+                      agregarProductoPeriodo(item.id, parseInt(periodo_id), 1, 0, 0);
                       setModalVisible(false);
                       onProductoAgregado?.();
                     } catch (error) {
-                      Alert.alert('Aviso', error.message);
+                      setModalVisible(false);
+                      setTimeout(() => {
+                        Toast.show({ type: 'error', text1: item.nombre +' ya agregado previamente' });
+                      }, 300);
                     }
                   }}
                 >
@@ -56,7 +60,6 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
                 <Text style={styles.vacio}>Sin productos</Text>
               }
             />
-
 
             <NuevoProductoModal
               categoria_id={categoria_id}

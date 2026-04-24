@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, Modal, Aler
 import { useState, useEffect } from 'react';
 import { obtenerCategorias } from '../db/queries/categorias';
 import { unirCategoriaPeriodo } from '../db/queries/categorias';
+import NuevaCategoriaModal from './NuevaCategoriaModal';
 
 export default function Categorias({ periodo_id, onCategoriaAgregada }) {
   const [categorias, setCategorias] = useState([]);
@@ -44,7 +45,7 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
                       setModalVisible(false);
                       onCategoriaAgregada?.(periodo_id);
                     } catch (error) {
-                        Alert.alert('Error', 'No se pudo agregar la categoría');
+                      Alert.alert('Error', 'No se pudo agregar la categoría');
                     }
                   }}
                 >
@@ -56,12 +57,12 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
               }
             />
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={crearNuevaCategoria}
-            >
-              <Text style={styles.buttonText}>Nueva categoria</Text>
-            </TouchableOpacity>
+            <NuevaCategoriaModal
+              onCategoriaCreada={() => {
+                const lista = obtenerCategorias();
+                setCategorias(lista);
+              }}
+            />
 
             <TouchableOpacity
               style={[styles.button, styles.buttonSecondary]}

@@ -63,13 +63,6 @@ export function agregarProductoPeriodo(
   precio_unitario,
   monto_esperado
 ) {
-  console.log('[agregarProductoPeriodo] INICIO', {
-    producto_id,
-    periodo_id,
-    cantidad,
-    precio_unitario,
-    monto_esperado
-  });
 
   const db = getDB();
 
