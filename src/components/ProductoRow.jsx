@@ -12,7 +12,7 @@ export default function ProductoRow({ producto, onChange }) {
         <View style={styles.campo}>
           <Text style={styles.label}>Cant.</Text>
           <TextInput
-            style={styles.input}
+            style={styles.inputCantidad}
             value={String(cantidad)}
             keyboardType="numeric"
             onChangeText={(v) => onChange({ ...producto, cantidad: v })}
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   inputs: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
   },
   campo: {
     alignItems: 'center',
@@ -71,9 +71,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e2e8f0',
     borderRadius: 6,
-    paddingHorizontal: 8,
     paddingVertical: 4,
-    width: 70,
+    width: 150,
+    textAlign: 'center',
+    fontSize: 14,
+    color: '#1e293b',
+  },
+  inputCantidad: {
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 6,
+    paddingVertical: 4,
+  
+    width: 30,
     textAlign: 'center',
     fontSize: 14,
     color: '#1e293b',

@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS producto_periodo (
   precio_unitario INTEGER DEFAULT 0,
   monto_esperado INTEGER DEFAULT 0,
   FOREIGN KEY (producto_id) REFERENCES productos(id),
-  FOREIGN KEY (periodo_id) REFERENCES periodos(id)
+  FOREIGN KEY (periodo_id) REFERENCES periodos(id),
+  UNIQUE (producto_id, periodo_id) 
 );
 
 CREATE TABLE IF NOT EXISTS categoria_periodo (

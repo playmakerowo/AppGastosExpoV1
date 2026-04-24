@@ -5,6 +5,7 @@ import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { obtenerProductosPorCategoria, actualizarProductoPeriodo } from '../../src/db/queries/producto_periodo';
 import { formatCLP, calcularMontoReal, estasobrePresupuesto } from '../../src/utils/calculos';
 import ProductoRow from '../../src/components/ProductoRow';
+import ProductosModal from '../../src/components/ProdutosModal';
 
 export default function CategoriaScreen() {
   const { id, periodo_id, nombre } = useLocalSearchParams();
@@ -76,6 +77,12 @@ export default function CategoriaScreen() {
             {formatCLP(totalEsperado - totalReal)}
           </Text>
         </View>
+        <View style={styles.resumenFila}>
+          <Text style={styles.resumenLabel}>Coste diario</Text>
+          <Text style={[styles.resumenValor, sobre && styles.rojo]}>
+            {formatCLP(totalReal / 30)}
+          </Text>
+        </View>
       </View>
 
       {/* Lista de productos */}
@@ -89,12 +96,14 @@ export default function CategoriaScreen() {
         showsVerticalScrollIndicator={false}
       />
 
-      {/* Botón guardar flotante */}
+      <ProductosModal categoria_id={id} periodo_id={periodo_id} onProductoAgregado={cargarProductos} />
+
       {hayEdiciones && (
-        <TouchableOpacity style={styles.btnGuardar} onPress={guardarTodo}>
-          <Text style={styles.btnGuardarText}>Guardar cambios</Text>
+        <TouchableOpacity style={styles.button} onPress={guardarTodo}>
+          <Text style={styles.btnText}>Guardar cambios</Text>
         </TouchableOpacity>
       )}
+
     </SafeAreaView>
   );
 }
@@ -107,9 +116,9 @@ const styles = StyleSheet.create({
   resumenCard: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    margin: 16,
+    margin: 8,
     borderRadius: 14,
-    padding: 16,
+    paddingVertical: 16,
     shadowColor: '#000',
     shadowOpacity: 0.07,
     shadowRadius: 6,
@@ -141,21 +150,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 100,
   },
-  btnGuardar: {
-    position: 'absolute',
-    bottom: 24,
-    left: 24,
-    right: 24,
+  button: {
     backgroundColor: '#6366f1',
-    borderRadius: 14,
-    paddingVertical: 16,
+    padding: 12,
+    borderRadius: 10,
     alignItems: 'center',
-    shadowColor: '#6366f1',
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    elevation: 6,
+    margin: 5,
   },
-  btnGuardarText: {
+  btnText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',

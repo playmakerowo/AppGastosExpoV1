@@ -56,35 +56,19 @@ export function obtenerProductosPorCategoria(periodo_id, categoria_id) {
 }
 
 // Agregar producto a un periodo
-export function agregarProductoPeriodo(
-  producto_id,
-  periodo_id,
-  cantidad,
-  precio_unitario,
-  monto_esperado
-) {
-  console.log('[agregarProductoPeriodo] INICIO', {
-    producto_id,
-    periodo_id,
-    cantidad,
-    precio_unitario,
-    monto_esperado
-  });
-
+export function agregarProductoPeriodo(producto_id, periodo_id, cantidad, precio_unitario, monto_esperado) {
   const db = getDB();
-
   try {
     const result = db.runSync(
       `INSERT INTO producto_periodo (producto_id, periodo_id, cantidad, precio_unitario, monto_esperado)
        VALUES (?, ?, ?, ?, ?)`,
       [producto_id, periodo_id, cantidad, precio_unitario, monto_esperado]
     );
-
-    console.log('[agregarProductoPeriodo] RESULT', result);
-
     return result.lastInsertRowId;
   } catch (error) {
-    console.error('[agregarProductoPeriodo] ERROR', error);
+    if (error.message?.includes('UNIQUE constraint failed')) {
+      throw new Error('Este producto ya está en el periodo');
+    }
     throw error;
   }
 }

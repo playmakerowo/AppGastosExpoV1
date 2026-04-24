@@ -18,13 +18,21 @@ export function obtenerCategorias() {
 
 export function unirCategoriaPeriodo(categoria_id, periodo_id) {
   const db = getDB();
-
-  console.log('INSERTANDO:', categoria_id, periodo_id);
-
-  const result = db.runSync(
+  db.runSync(
     'INSERT INTO categoria_periodo (categoria_id, periodo_id, monto_esperado) VALUES (?, ?, 0)',
     [categoria_id, periodo_id]
   );
+}
 
-  console.log('RESULT:', result);
+export function actualizarMontoEsperadoCategoria(categoria_id, periodo_id, monto_esperado) {
+  const db = getDB();
+
+  const result = db.runSync(
+    `UPDATE categoria_periodo 
+     SET monto_esperado = ? 
+     WHERE categoria_id = ? AND periodo_id = ?`,
+    [monto_esperado, categoria_id, periodo_id]
+  );
+
+  return result.changes;
 }

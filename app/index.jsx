@@ -16,6 +16,7 @@ export default function HomeScreen() {
   const [periodoIdx, setPeriodoIdx] = useState(0);
   const [resumen, setResumen] = useState([]);
   const [totales, setTotales] = useState({ totalEsperado: 0, totalReal: 0 });
+  const [totalIngresos, setTotalIngresos] = useState(0);
 
   const inicializado = useRef(false);
   const periodoIdxRef = useRef(0);
@@ -68,6 +69,10 @@ export default function HomeScreen() {
     const conDatos = datos.filter(d => d.monto_esperado > 0 || d.monto_real == 0);
     setResumen(datos);
     setTotales(calcularTotales(conDatos));
+
+    // 👇 buscar la categoría de ingresos (id: 1)
+    const ingresos = datos.find(d => d.categoria_id === 1);
+    setTotalIngresos(ingresos?.monto_real ?? 0);
   }
 
   function irAnterior() {
@@ -117,8 +122,13 @@ export default function HomeScreen() {
 
       <View style={styles.totalesCard}>
         <View style={styles.totalItem}>
-          <Text style={styles.totalLabel}>Presupuestado</Text>
+          <Text style={styles.totalLabel}>Estimado</Text>
           <Text style={styles.totalValor}>{formatCLP(totales.totalEsperado)}</Text>
+        </View>
+        <View style={styles.divisor} />
+        <View style={styles.totalItem}>
+          <Text style={styles.totalLabel}>Ingresos</Text>
+          <Text style={styles.totalValor}>{formatCLP(totalIngresos)}</Text>  {/* 👈 */}
         </View>
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
@@ -146,7 +156,7 @@ export default function HomeScreen() {
               `/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`
             )}
           />
-          
+
         )}
         contentContainerStyle={styles.lista}
         showsVerticalScrollIndicator={false}
@@ -179,13 +189,15 @@ const styles = StyleSheet.create({
   totalesCard: {
     flexDirection: 'row',
     backgroundColor: '#fff',
-    margin: 16,
+    margin: 8,
     borderRadius: 14,
-    padding: 16,
+    paddingVertical: 16,
     shadowColor: '#000',
     shadowOpacity: 0.07,
     shadowRadius: 6,
     elevation: 3,
+    borderLeftWidth: 4,
+    borderLeftColor: '#22c55e',
   },
   totalItem: { flex: 1, alignItems: 'center' },
   totalLabel: { fontSize: 11, color: '#94a3b8', marginBottom: 4 },
