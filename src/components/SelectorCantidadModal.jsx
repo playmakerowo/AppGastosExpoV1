@@ -36,7 +36,7 @@ export default function SelectorCantidadModal({ value, onChange, esDinero }) {
       <TouchableOpacity onPress={() => setModalVisible(true)}>
         <TextInput
           style={styles.input}
-          value={String(cantidad)}
+          value={formatCLP(cantidad, esDinero)}
           keyboardType="numeric"
           editable={false}
           pointerEvents="none"
@@ -51,7 +51,7 @@ export default function SelectorCantidadModal({ value, onChange, esDinero }) {
 
             <TextInput
               style={styles.valorActual}
-              value={formatCLP(cantidad, esDinero)}
+              value={String(cantidad)}
               keyboardType="numeric"
               onChangeText={(v) => setCantidad(parseInt(v) || 0)}
               selectTextOnFocus
