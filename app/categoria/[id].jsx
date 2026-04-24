@@ -5,6 +5,8 @@ import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { obtenerProductosPorCategoria, actualizarProductoPeriodo } from '../../src/db/queries/producto_periodo';
 import { formatCLP, calcularMontoReal, estasobrePresupuesto } from '../../src/utils/calculos';
 import ProductoRow from '../../src/components/ProductoRow';
+import GastoEsperadoModal from '../../src/components/GastoEsperadoModal';
+import { obtenerGastoEsperado } from '../../src/db/queries/categorias';
 import ProductosModal from '../../src/components/ProdutosModal';
 
 export default function CategoriaScreen() {
@@ -12,8 +14,12 @@ export default function CategoriaScreen() {
   const navigation = useNavigation();
   const [productos, setProductos] = useState([]);
   const [editados, setEditados] = useState({});
+  const [montoEstimado, setMontoEstimado] = useState(0);
 
   useEffect(() => {
+    const montoEstimado = obtenerGastoEsperado(id, periodo_id);
+    setMontoEstimado(montoEstimado);
+
     navigation.setOptions({ title: nombre || 'Categoría' });
     cargarProductos();
   }, [id, periodo_id]);
@@ -59,7 +65,6 @@ export default function CategoriaScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
-      {/* Resumen de la categoría */}
       <View style={[styles.resumenCard, sobre && styles.resumenRojo]}>
         <View style={styles.resumenFila}>
           <Text style={styles.resumenLabel}>Gastado</Text>
@@ -69,12 +74,12 @@ export default function CategoriaScreen() {
         </View>
         <View style={styles.resumenFila}>
           <Text style={styles.resumenLabel}>Presupuesto</Text>
-          <Text style={styles.resumenValor}>{formatCLP(totalEsperado)}</Text>
+          <Text style={styles.resumenValor}>{formatCLP(montoEstimado)}</Text>
         </View>
         <View style={styles.resumenFila}>
           <Text style={styles.resumenLabel}>Restante</Text>
           <Text style={[styles.resumenValor, sobre && styles.rojo]}>
-            {formatCLP(totalEsperado - totalReal)}
+            {formatCLP(montoEstimado - totalReal)}
           </Text>
         </View>
         <View style={styles.resumenFila}>
@@ -84,6 +89,15 @@ export default function CategoriaScreen() {
           </Text>
         </View>
       </View>
+
+      <GastoEsperadoModal
+        categoria_id={id}
+        periodo_id={periodo_id}
+        onActualizado={() => {
+          const monto = obtenerGastoEsperado(id, periodo_id);
+          setMontoEstimado(monto);
+        }}
+      />
 
       {/* Lista de productos */}
       <FlatList

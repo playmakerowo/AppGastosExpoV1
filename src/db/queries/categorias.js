@@ -36,3 +36,31 @@ export function actualizarMontoEsperadoCategoria(categoria_id, periodo_id, monto
 
   return result.changes;
 }
+
+export function obtenerGastoEsperado(categoria_id, periodo_id) {
+  const db = getDB();
+
+  console.log("[obtenerGastoEsperado] CATEGORIA:",categoria_id," PERIODO:", periodo_id)
+  const row = db.getFirstSync(
+    'SELECT monto_esperado FROM categoria_periodo WHERE categoria_id = ? AND periodo_id = ?',
+    [categoria_id, periodo_id]
+  );
+
+  return row?.monto_esperado ?? 0;
+}
+
+export function obtenerGastoEsperadoTodasCategorias(periodo_id) {
+  const db = getDB();
+
+  console.log("[obtenerGastoEsperadoTodasCategorias] PERIODO:", periodo_id);
+
+  const rows = db.getAllSync(
+    `SELECT SUM(monto_esperado) as total 
+     FROM categoria_periodo 
+     WHERE periodo_id = ? AND categoria_id != 1`,
+    [periodo_id]
+  );
+
+  console.log("[obtenerGastoEsperadoTodasCategorias] estimado:", rows[0]?.total ?? 0);
+  return rows[0]?.total ?? 0;
+}

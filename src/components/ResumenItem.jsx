@@ -9,7 +9,7 @@ export default function ResumenItem({ categoria, onPress }) {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.fila}>
-        <Text style={styles.icono}>{icono} {nombre}</Text>
+        <Text style={styles.icono}>{icono} {categoria.categoria}</Text>
         <Text style={styles.nombre} numberOfLines={1}>{nombre}</Text>
         <View style={styles.montos}>
           <Text style={[styles.real, sobre && styles.rojo]}>
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   icono: {
-    fontSize: 20,
+    fontSize: 18,
     marginRight: 10,
   },
   nombre: {

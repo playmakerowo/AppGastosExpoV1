@@ -1,24 +1,35 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Button, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
-import { obtenerCategorias } from '../db/queries/categorias';
-import { unirCategoriaPeriodo } from '../db/queries/categorias';
+import { obtenerGastoEsperado } from '../db/queries/categorias';
+import { actualizarMontoEsperadoCategoria } from '../db/queries/categorias';
 
-export default function Categorias({ periodo_id, onCategoriaAgregada }) {
-  const [categorias, setCategorias] = useState([]);
+export default function GastoEsperadoModal({ categoria_id, periodo_id, onActualizado }) {
+  const [gastoEsperado, setGastoEsperado] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    const lista = obtenerCategorias();
-    setCategorias(lista);
+    const montoEstimado = obtenerGastoEsperado(categoria_id, periodo_id);
+    setGastoEsperado(montoEstimado);
   }, []);
 
+  function guardar() {
+    try {
+      actualizarMontoEsperadoCategoria(categoria_id, periodo_id, parseInt(gastoEsperado) || 0);
+      setModalVisible(false);
+      onActualizado?.();
+      Alert.alert('✓', 'Gasto estimado actualizado');
+    } catch (e) {
+      Alert.alert('Error', 'No se pudo actualizar');
+    }
+  }
+
   return (
-    <View>
+<View>
       <TouchableOpacity
         style={styles.button}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.buttonText}>Agregar categoria</Text>
+        <Text style={styles.buttonText}>Modificar Gasto estimado</Text>
       </TouchableOpacity>
 
       <Modal
@@ -29,38 +40,21 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
 
-            <Text style={styles.modalTitulo}>Categorías</Text>
+            <Text style={styles.modalTitulo}>Gasto estimado</Text>
 
-            <FlatList
-              data={categorias}
-              keyExtractor={(item) => String(item.id)}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.item}
-                  onPress={() => {
-                    console.log("agregar categoria:" + item.nombre + " Periodo:" + periodo_id);
-                    try {
-                      unirCategoriaPeriodo(item.id, periodo_id);
-                      setModalVisible(false);
-                      onCategoriaAgregada?.(periodo_id);
-                    } catch (error) {
-                        Alert.alert('Error', 'No se pudo agregar la categoría');
-                    }
-                  }}
-                >
-                  <Text>{item.nombre}</Text>
-                </TouchableOpacity>
-              )}
-              ListEmptyComponent={
-                <Text style={styles.vacio}>Sin categorías</Text>
-              }
+            <TextInput
+              style={styles.input}
+              placeholder="$100.000"
+              value={String(gastoEsperado)}
+              onChangeText={(val) => setGastoEsperado(val)}
+              keyboardType="numeric"
             />
 
             <TouchableOpacity
               style={styles.button}
-              onPress={crearNuevaCategoria}
+              onPress={guardar}
             >
-              <Text style={styles.buttonText}>Nueva categoria</Text>
+              <Text style={styles.buttonText}>Actualizar gasto estimado</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -77,10 +71,10 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
   );
 }
 
-function crearNuevaCategoria() {
+function crearNuevogastoEsperado() {
   Alert.alert(
-    'Crear categoria',
-    `¿Crear nueva categoria?`,
+    'Crear Nuevo gastoEsperado',
+    `¿Crear nueva gastoEsperado?`,
     [
       { text: 'Cancelar', style: 'cancel' },
       {
