@@ -1,5 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { formatCLP } from '../utils/calculos';
+import SelectorCantidadModal from './SelectorCantidadModal';
 
 export default function ProductoRow({ producto, onChange }) {
   const { nombre, cantidad, precio_unitario } = producto;
@@ -11,21 +12,18 @@ export default function ProductoRow({ producto, onChange }) {
       <View style={styles.inputs}>
         <View style={styles.campo}>
           <Text style={styles.label}>Cant.</Text>
-          <TextInput
-            style={styles.inputCantidad}
-            value={String(cantidad)}
-            keyboardType="numeric"
-            onChangeText={(v) => onChange({ ...producto, cantidad: v })}
+          <SelectorCantidadModal
+            value={producto.cantidad}
+            onChange={(cantidad) => onChange({ ...producto, cantidad: cantidad })}
+            esDinero={false}
           />
         </View>
         <Text style={styles.mult}>×</Text>
         <View style={styles.campo}>
           <Text style={styles.label}>Precio</Text>
-          <TextInput
-            style={styles.input}
-            value={String(precio_unitario)}
-            keyboardType="numeric"
-            onChangeText={(v) => onChange({ ...producto, precio_unitario: v })}
+          <SelectorCantidadModal
+            value={precio_unitario}
+            onChange={(cantidad) => onChange({ ...producto, precio_unitario: cantidad })}
           />
         </View>
         <View style={styles.total}>
@@ -82,7 +80,7 @@ const styles = StyleSheet.create({
     borderColor: '#e2e8f0',
     borderRadius: 6,
     paddingVertical: 4,
-  
+
     width: 30,
     textAlign: 'center',
     fontSize: 14,

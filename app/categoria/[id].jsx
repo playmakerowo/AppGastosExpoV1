@@ -7,6 +7,7 @@ import { formatCLP, calcularMontoReal, estasobrePresupuesto } from '../../src/ut
 import ProductoRow from '../../src/components/ProductoRow';
 import GastoEsperadoModal from '../../src/components/GastoEsperadoModal';
 import { obtenerGastoEsperado } from '../../src/db/queries/categorias';
+import Toast from 'react-native-toast-message';
 import ProductosModal from '../../src/components/ProdutosModal';
 
 export default function CategoriaScreen() {
@@ -35,6 +36,8 @@ export default function CategoriaScreen() {
       prev.map(p => p.id === productoActualizado.id ? productoActualizado : p)
     );
     setEditados(prev => ({ ...prev, [productoActualizado.id]: true }));
+
+    guardarTodo();
   }
 
   function guardarTodo() {
@@ -50,17 +53,16 @@ export default function CategoriaScreen() {
         }
       });
       setEditados({});
-      Alert.alert('✓', 'Cambios guardados');
+      Toast.show({ type: 'success', text1: 'Cambios guardados' });
     } catch (e) {
-      Alert.alert('Error', 'No se pudo guardar');
+      Toast.show({ type: 'error', text1: 'No se pudo guardar' });
     }
   }
 
   const totalReal = productos.reduce(
     (acc, p) => acc + calcularMontoReal(p.cantidad, p.precio_unitario), 0
   );
-  const totalEsperado = productos[0]?.monto_esperado || 0;
-  const sobre = estasobrePresupuesto(totalReal, totalEsperado);
+  const sobre = estasobrePresupuesto(totalReal, montoEstimado);
   const hayEdiciones = Object.keys(editados).length > 0;
 
   return (
@@ -118,6 +120,7 @@ export default function CategoriaScreen() {
         </TouchableOpacity>
       )}
 
+      <Toast position='bottom' bottomOffset={50} onPress={() => Toast.hide()} />
     </SafeAreaView>
   );
 }

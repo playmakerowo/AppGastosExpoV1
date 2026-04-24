@@ -1,9 +1,9 @@
 // Formato pesos chilenos: 180000 → "$180.000"
-export function formatCLP(valor) {
+export function formatCLP(valor, conSimbolo = true) {
   const num = parseInt(valor) || 0;
   return new Intl.NumberFormat('es-CL', {
-    style: 'currency',
-    currency: 'CLP',
+    style: conSimbolo ? 'currency' : 'decimal',
+    currency: conSimbolo ? 'CLP' : undefined,
     minimumFractionDigits: 0,
   }).format(num);
 }
@@ -18,18 +18,6 @@ export function calcularMontoReal(cantidad, precio_unitario) {
 // Retorna true si está sobre el presupuesto
 export function estasobrePresupuesto(monto_real, monto_esperado) {
   return parseInt(monto_real) > parseInt(monto_esperado);
-}
-
-// Resumen total de un periodo
-export function calcularTotales(resumenCategorias) {
-  return resumenCategorias.reduce(
-    (acc, cat) => {
-      acc.totalEsperado += parseInt(cat.monto_esperado) || 0;
-      acc.totalReal += parseInt(cat.monto_real) || 0;
-      return acc;
-    },
-    { totalEsperado: 0, totalReal: 0 }
-  );
 }
 
 // Porcentaje usado del presupuesto

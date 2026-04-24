@@ -6,7 +6,7 @@ import { obtenerResumenCategorias } from '../src/db/queries/producto_periodo';
 import { obtenerPeriodos, crearPeriodo } from '../src/db/queries/periodos';
 import { crearHogar, obtenerHogares } from '../src/db/queries/hogares';
 import { seedData } from '../src/utils/seedData';
-import { formatCLP, calcularTotales, formatMes, mesActual } from '../src/utils/calculos';
+import { formatCLP, formatMes, mesActual } from '../src/utils/calculos';
 import ResumenItem from '../src/components/ResumenItem';
 import Categorias from '../src/components/Categorias';
 import { obtenerGastoEsperadoTodasCategorias, obtenerGastoTodasCategorias } from '../src/db/queries/categorias';
@@ -17,7 +17,6 @@ export default function HomeScreen() {
   const [periodos, setPeriodos] = useState([]);
   const [periodoIdx, setPeriodoIdx] = useState(0);
   const [resumen, setResumen] = useState([]);
-  const [totales, setTotales] = useState({ totalEsperado: 0, totalReal: 0 });
   const [totalIngresos, setTotalIngresos] = useState(0);
   const [totalEstimado, setTotalEstimado] = useState(0);
   const [totalGastado, setTotalGastado] = useState(0);
@@ -70,9 +69,7 @@ export default function HomeScreen() {
 
   function cargarResumen(periodo_id) {
     const datos = obtenerResumenCategorias(periodo_id);
-    const conDatos = datos.filter(d => d.monto_esperado > 0 || d.monto_real == 0);
     setResumen(datos);
-    setTotales(calcularTotales(conDatos));
 
     const ingresos = datos.find(d => d.categoria_id === 1);
     setTotalIngresos(ingresos?.monto_real ?? 0);
@@ -144,7 +141,7 @@ export default function HomeScreen() {
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Restante</Text>
-          <Text style={styles.totalValor}>{formatCLP(totalGastado-totalEstimado)}</Text>
+          <Text style={styles.totalValor}>{formatCLP(totalIngresos-totalGastado)}</Text>
         </View>
       </View>
 
