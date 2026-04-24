@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert } from
 import { useState, useEffect } from 'react';
 import { obtenerProductos } from '../db/queries/productos';
 import { agregarProductoPeriodo } from '../db/queries/producto_periodo';
+import NuevoProductoModal from './NuevoProductoModal';
 
 export default function ProductosModal({ categoria_id, periodo_id, onProductoAgregado }) {
   const [productos, setProductos] = useState([]);
@@ -56,12 +57,14 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
               }
             />
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={crearNuevoProducto}
-            >
-              <Text style={styles.buttonText}>Nuevo producto</Text>
-            </TouchableOpacity>
+
+            <NuevoProductoModal
+              categoria_id={categoria_id}
+              onProductoCreado={() => {
+                const lista = obtenerProductos(categoria_id);
+                setProductos(lista);
+              }}
+            />
 
             <TouchableOpacity
               style={[styles.button, styles.buttonSecondary]}
@@ -74,19 +77,6 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
         </View>
       </Modal>
     </View>
-  );
-}
-
-function crearNuevoProducto() {
-  Alert.alert(
-    'Crear Nuevo Producto',
-    `¿Crear Nuevo Producto?`,
-    [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Crear'
-      },
-    ]
   );
 }
 
