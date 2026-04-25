@@ -34,7 +34,6 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
     } catch (e) {
       Toast.show({ type: 'error', text1: 'No se pudo guardar' });
     }
-
   }
 
   return (

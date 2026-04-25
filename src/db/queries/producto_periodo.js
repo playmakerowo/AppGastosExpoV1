@@ -128,10 +128,7 @@ export function actualizarProductoPeriodo(
 
 // Resumen por categoría en un periodo
 export function obtenerResumenCategorias(periodo_id) {
-  console.log('[obtenerResumenCategorias] INICIO', { periodo_id });
-
   const db = getDB();
-
   try {
     const result = db.getAllSync(
       `SELECT
@@ -149,10 +146,7 @@ export function obtenerResumenCategorias(periodo_id) {
    GROUP BY c.id, cp.monto_esperado, c.nombre, c.icono`,
       [periodo_id]
     );
-
-    console.log('[obtenerResumenCategorias] COUNT', result.length);
     console.log('[obtenerResumenCategorias] DATA', result);
-
     return result;
   } catch (error) {
     console.error('[obtenerResumenCategorias] ERROR', error);

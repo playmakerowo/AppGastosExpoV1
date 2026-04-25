@@ -1,20 +1,30 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
-import { obtenerCategorias, unirCategoriaPeriodo } from '../db/queries/categorias';
+import { obtenerCategorias, actualizarMontoEsperadoCategoria } from '../db/queries/categorias';
 import { obtenerResumenCategorias } from '../db/queries/producto_periodo';
 import SelectorCantidadModal from './SelectorCantidadModal';
+import Toast from 'react-native-toast-message';
 
 export default function EditarPresupuestos({ periodo_id }) {
   const [categorias, setCategorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const datos = obtenerResumenCategorias(periodo_id);
   console.log('[EditarPresupuestos] Categorias:', datos);
-  
+
 
   useEffect(() => {
     const lista = obtenerCategorias();
     setCategorias(lista);
   }, []);
+
+  function guardarMontoEsperado(categoria_id, val) {
+    try {
+      actualizarMontoEsperadoCategoria(categoria_id, periodo_id, parseInt(val) || 0);
+      Toast.show({ type: 'success', text1: 'Presupuesto actualizado' });
+    } catch (e) {
+      Toast.show({ type: 'error', text1: 'No se pudo guardar' });
+    }
+  }
 
   return (
     <View>
@@ -38,22 +48,46 @@ export default function EditarPresupuestos({ periodo_id }) {
             <FlatList
               data={datos}
               keyExtractor={(item) => String(item.categoria_id)}
-              renderItem={({ item }) => (
-                <View
-                  style={styles.item}
-                  onPress={() => {console.log("Editar presupuesto: ", item.categoria)}}
-                >
-                  <Text>{item.icono} {item.categoria}</Text>
-                  <Text>
-                    <SelectorCantidadModal value={item.monto_esperado}/>/
-                    <SelectorCantidadModal value={item.monto_real}/>
-                  </Text>
-                </View>
-              )}
+              renderItem={({ item }) => {
+                const esIngreso = item.categoria_id === 1;
+
+                return (
+                  <View style={styles.item}>
+                    <Text style={styles.categoriaNombre}>{item.icono} {item.categoria}</Text>
+                    <View style={styles.filaCampos}>
+                      <View style={styles.campo}>
+                        <Text style={[styles.campoLabel,
+                        !esIngreso && item.monto_real > item.monto_esperado && styles.rojo,
+                        esIngreso && item.monto_real < item.monto_esperado && styles.rojo
+                        ]}>
+                          {esIngreso ? 'Ingresos esperados' : 'Presupuesto'}
+                        </Text>
+                        <SelectorCantidadModal
+                          value={item.monto_esperado}
+                          esDinero={true}
+                          onChange={(val) => guardarMontoEsperado(item.categoria_id, val)}
+                        />
+                      </View>
+                      <View style={styles.campo}>
+                        <Text style={[styles.campoLabel,
+                        !esIngreso && item.monto_real > item.monto_esperado && styles.rojo,
+                        esIngreso && item.monto_real < item.monto_esperado && styles.rojo
+                        ]}>{esIngreso ? 'Ingresos actuales' : 'Gasto actual'}</Text>
+                        <SelectorCantidadModal
+                          value={item.monto_real}
+                          esDinero={true}
+                          onChange={(val) => console.log('presupuesto:', val)}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                );
+              }}
               ListEmptyComponent={
                 <Text style={styles.vacio}>Sin categorías</Text>
               }
             />
+
             <TouchableOpacity
               style={[styles.button, styles.buttonSecondary]}
               onPress={() => setModalVisible(false)}
@@ -67,19 +101,6 @@ export default function EditarPresupuestos({ periodo_id }) {
   );
 }
 
-function crearNuevaCategoria() {
-  Alert.alert(
-    'Crear categoria',
-    `¿Crear nueva categoria?`,
-    [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Crear'
-      },
-    ]
-  );
-}
-
 
 const styles = StyleSheet.create({
   modalOverlay: {
@@ -87,6 +108,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     padding: 20,
+  },
+  rojo: {
+    color: '#ef4444',
+    fontWeight: '700',
   },
   modalContainer: {
     backgroundColor: '#fff',
@@ -120,5 +145,23 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  categoriaNombre: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1e293b',
+    marginBottom: 8,
+  },
+  filaCampos: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  campo: {
+    flex: 1,
+  },
+  campoLabel: {
+    fontSize: 11,
+    color: '#94a3b8',
+    marginBottom: 4,
   },
 });
