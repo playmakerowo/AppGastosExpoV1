@@ -105,10 +105,12 @@ export default function PeriodoScreen() {
         data={periodos}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item, index }) => (
-          <View style={styles.item}>
+          <TouchableOpacity style={styles.item} onPress={() => {
+            router.push(`/?periodo_id=${item.id}`);
+          }}>
             <Text style={styles.mesTexto}>{formatMes(item.mes)}</Text>
             {index === 0 && <Text style={styles.badge}>Actual</Text>}
-          </View>
+          </TouchableOpacity>
         )}
         contentContainerStyle={styles.lista}
         ListEmptyComponent={
@@ -122,7 +124,6 @@ export default function PeriodoScreen() {
         </Text>
       </TouchableOpacity>
 
-      {/* MODAL */}
       <Modal
         visible={modalCrearPeriodo.visible}
         transparent

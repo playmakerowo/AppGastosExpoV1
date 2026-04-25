@@ -13,6 +13,7 @@ import Toast from 'react-native-toast-message';
 import CategoriasModal from '../src/components/CategoriasModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EditarPresupuestos from '../src/components/EditarPresupuestosModal';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function HomeScreen() {
   const restanteNegativo = (totalIngresos - totalGastado) < 0;
   const estimadoExcede = totalEstimado > totalIngresos;
 
+  const { periodo_id } = useLocalSearchParams();
   const inicializado = useRef(false);
   const periodoIdxRef = useRef(0);
 
@@ -64,6 +66,16 @@ export default function HomeScreen() {
         lista = obtenerPeriodos(hogarId);
       }
       setPeriodos(lista);
+      if (periodo_id) {
+        const idx = lista.findIndex(p => String(p.id) === String(periodo_id));
+        if (idx !== -1) {
+          setPeriodoIdx(idx);
+          periodoIdxRef.current = idx;
+          cargarResumen(lista[idx].id);
+          return;
+        }
+      }
+      cargarResumen(lista[0].id);
       setPeriodoIdx(0);
       periodoIdxRef.current = 0;
       cargarResumen(lista[0].id);
