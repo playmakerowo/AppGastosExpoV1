@@ -117,7 +117,7 @@ export default function CategoriaScreen() {
         </TouchableOpacity>
       )}
 
-      <Toast position='top' bottomOffset={50} onPress={() => Toast.hide()} />
+      <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
     </SafeAreaView>
   );
 }

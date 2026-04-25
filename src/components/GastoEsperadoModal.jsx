@@ -40,7 +40,7 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
   return (
     <View>
       <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Modificar Gasto estimado</Text>
+        <Text style={styles.buttonText}>Modificar Presupuesto</Text>
       </TouchableOpacity>
 
       <Modal visible={modalVisible} transparent animationType="fade">

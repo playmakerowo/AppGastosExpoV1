@@ -21,6 +21,9 @@ export default function HomeScreen() {
   const [totalIngresos, setTotalIngresos] = useState(0);
   const [totalEstimado, setTotalEstimado] = useState(0);
   const [totalGastado, setTotalGastado] = useState(0);
+  const gastadoExcede = totalGastado > totalIngresos;
+  const restanteNegativo = (totalIngresos - totalGastado) < 0;
+  const estimadoExcede = totalEstimado > totalIngresos;
 
   const inicializado = useRef(false);
   const periodoIdxRef = useRef(0);
@@ -97,6 +100,23 @@ export default function HomeScreen() {
     }
   }
 
+  function mostrarAlerta() {
+    let mensaje = '';
+
+    if (estimadoExcede) {
+      mensaje = 'El presupuesto estimado supera los ingresos';
+    }
+
+    if (gastadoExcede) {
+      mensaje = 'El gasto real supera los ingresos';
+    }
+
+    Toast.show({
+      type: 'error',
+      text1: mensaje
+    });
+  }
+
   const periodo = periodos[periodoIdx];
 
   return (
@@ -124,10 +144,12 @@ export default function HomeScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.totalesCard}>
+      <TouchableOpacity style={styles.totalesCard} onPress={mostrarAlerta}>
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Estimado</Text>
-          <Text style={styles.totalValor}>{formatCLP(totalEstimado)}</Text>
+          <Text style={[styles.totalValor, estimadoExcede && styles.rojo]}>
+            {formatCLP(totalEstimado)}
+          </Text>
         </View>
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
@@ -137,14 +159,18 @@ export default function HomeScreen() {
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Gastado</Text>
-          <Text style={styles.totalValor}>{formatCLP(totalGastado)}</Text>
+          <Text style={[styles.totalValor, gastadoExcede && styles.rojo]}>
+            {formatCLP(totalGastado)}
+          </Text>
         </View>
         <View style={styles.divisor} />
         <View style={styles.totalItem}>
           <Text style={styles.totalLabel}>Restante</Text>
-          <Text style={styles.totalValor}>{formatCLP(totalIngresos - totalGastado)}</Text>
+          <Text style={[styles.totalValor, restanteNegativo && styles.rojo]}>
+            {formatCLP(totalIngresos - totalGastado)}
+          </Text>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <FlatList
         data={resumen}
@@ -169,7 +195,7 @@ export default function HomeScreen() {
         }
       />
       <CategoriasModal periodo_id={periodo?.id} onCategoriaAgregada={cargarResumen} />
-      <Toast position='bottom' bottomOffset={50} onPress={() => Toast.hide()} />
+      <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
     </SafeAreaView>
   );
 }
