@@ -16,6 +16,7 @@ export default function CategoriaScreen() {
   const [productos, setProductos] = useState([]);
   const [editados, setEditados] = useState({});
   const [montoEstimado, setMontoEstimado] = useState(0);
+  const esIngreso = parseInt(id) === 1;
 
   useEffect(() => {
     const montoEstimado = obtenerGastoEsperado(id, periodo_id);
@@ -50,7 +51,7 @@ export default function CategoriaScreen() {
         parseInt(p.monto_esperado) || 0
       );
       setEditados({});
-      Toast.show({ type: 'success', text1: 'Cambios guardados producto: '+p.nombre });
+      Toast.show({ type: 'success', text1: 'Cambios guardados producto: ' + p.nombre });
     } catch (e) {
       Toast.show({ type: 'error', text1: 'No se pudo guardar' });
     }
@@ -64,39 +65,49 @@ export default function CategoriaScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
-      <View style={[styles.resumenCard, sobre && styles.resumenRojo]}>
-        <View style={styles.resumenFila}>
-          <Text style={styles.resumenLabel}>Gastado</Text>
-          <Text style={[styles.resumenValor, sobre && styles.rojo]}>
-            {formatCLP(totalReal)}
-          </Text>
-        </View>
-        <View style={styles.resumenFila}>
-          <Text style={styles.resumenLabel}>Presupuesto</Text>
-          <Text style={styles.resumenValor}>{formatCLP(montoEstimado)}</Text>
-        </View>
-        <View style={styles.resumenFila}>
-          <Text style={styles.resumenLabel}>Restante</Text>
-          <Text style={[styles.resumenValor, sobre && styles.rojo]}>
-            {formatCLP(montoEstimado - totalReal)}
-          </Text>
-        </View>
-        <View style={styles.resumenFila}>
-          <Text style={styles.resumenLabel}>Coste diario</Text>
-          <Text style={[styles.resumenValor, sobre && styles.rojo]}>
-            {formatCLP(totalReal / 30)}
-          </Text>
-        </View>
+      <View style={[styles.resumenCard, sobre && !esIngreso && styles.resumenRojo]}>
+        {esIngreso ? (
+          <View style={styles.resumenFila}>
+            <Text style={styles.resumenLabel}>Ingresos</Text>
+            <Text style={styles.resumenValor}>{formatCLP(totalReal)}</Text>
+          </View>
+        ) : (
+          <>
+            <View style={styles.resumenFila}>
+              <Text style={styles.resumenLabel}>Gastado</Text>
+              <Text style={[styles.resumenValor, sobre && styles.rojo]}>
+                {formatCLP(totalReal)}
+              </Text>
+            </View>
+            <View style={styles.resumenFila}>
+              <Text style={styles.resumenLabel}>Presupuesto</Text>
+              <Text style={styles.resumenValor}>{formatCLP(montoEstimado)}</Text>
+            </View>
+            <View style={styles.resumenFila}>
+              <Text style={styles.resumenLabel}>Restante</Text>
+              <Text style={[styles.resumenValor, sobre && styles.rojo]}>
+                {formatCLP(montoEstimado - totalReal)}
+              </Text>
+            </View>
+            <View style={styles.resumenFila}>
+              <Text style={styles.resumenLabel}>Coste diario</Text>
+              <Text style={[styles.resumenValor, sobre && styles.rojo]}>
+                {formatCLP(totalReal / 30)}
+              </Text>
+            </View>
+          </>
+        )}
       </View>
-
-      <GastoEsperadoModal
-        categoria_id={id}
-        periodo_id={periodo_id}
-        onActualizado={() => {
-          const monto = obtenerGastoEsperado(id, periodo_id);
-          setMontoEstimado(monto);
-        }}
-      />
+      {!esIngreso && (
+        <GastoEsperadoModal
+          categoria_id={id}
+          periodo_id={periodo_id}
+          onActualizado={() => {
+            const monto = obtenerGastoEsperado(id, periodo_id);
+            setMontoEstimado(monto);
+          }}
+        />
+      )}
 
       {/* Lista de productos */}
       <FlatList
@@ -110,7 +121,7 @@ export default function CategoriaScreen() {
       />
 
       <ProductosModal categoria_id={id} periodo_id={periodo_id} onProductoAgregado={cargarProductos} />
-      
+
       <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
     </SafeAreaView>
   );
@@ -156,7 +167,7 @@ const styles = StyleSheet.create({
   },
   lista: {
     paddingHorizontal: 16,
-    paddingBottom: 100,
+    paddingBottom: 10,
   },
   button: {
     backgroundColor: '#6366f1',
