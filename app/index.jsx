@@ -274,6 +274,6 @@ const styles = StyleSheet.create({
   totalValor: { fontSize: 14, fontWeight: '700', color: '#0f172a' },
   rojo: { color: '#ef4444' },
   divisor: { width: 1, backgroundColor: '#f1f5f9', marginVertical: 4 },
-  lista: { paddingHorizontal: 16, paddingBottom: 100 },
+  lista: { paddingHorizontal: 16, paddingBottom: 10 },
   vacio: { textAlign: 'center', color: '#94a3b8', marginTop: 40, fontSize: 15 },
 });
