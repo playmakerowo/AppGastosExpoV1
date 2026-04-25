@@ -105,16 +105,19 @@ export default function HomeScreen() {
 
     if (estimadoExcede) {
       mensaje = 'El presupuesto estimado supera los ingresos';
+      Toast.show({
+        type: 'error',
+        text1: mensaje
+      });
     }
 
     if (gastadoExcede) {
       mensaje = 'El gasto real supera los ingresos';
+      Toast.show({
+        type: 'error',
+        text1: mensaje
+      });
     }
-
-    Toast.show({
-      type: 'error',
-      text1: mensaje
-    });
   }
 
   const periodo = periodos[periodoIdx];
