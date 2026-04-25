@@ -2,11 +2,11 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { formatCLP, estasobrePresupuesto, porcentajeUso } from '../utils/calculos';
 import { quitarCategoriaPeriodo } from '../db/queries/categorias';
 
-export default function ResumenItem({ categoria, onPress, periodo_id, onEliminado }) {
-  const { nombre, icono, monto_esperado, monto_real } = categoria;
+export default function ResumenItem({ categoria, onPress, periodo_id, onEliminado, onSubir, onBajar }) {
+  const { icono, monto_esperado, monto_real } = categoria;
   const sobre = estasobrePresupuesto(monto_real, monto_esperado);
   const pct = porcentajeUso(monto_real, monto_esperado);
-  const esIngreso = categoria.categoria === 'Ingresos';
+  const esIngreso = categoria.categoria_id === 1;
 
   function eliminar() {
     Alert.alert(
@@ -42,14 +42,15 @@ export default function ResumenItem({ categoria, onPress, periodo_id, onEliminad
             <>
               <Text style={styles.separador}>/</Text>
               <Text style={styles.esperado}>{formatCLP(monto_esperado)}</Text>
-
-              <TouchableOpacity onPress={eliminar} style={styles.btnEliminar}>
+              <TouchableOpacity
+                onPress={(e) => { e.stopPropagation(); eliminar(); }}
+                style={styles.btnEliminar}
+              >
                 <Text style={styles.btnEliminarTexto}>✕</Text>
               </TouchableOpacity>
             </>
           )}
         </View>
-
       </View>
 
       {!esIngreso && (
@@ -57,12 +58,28 @@ export default function ResumenItem({ categoria, onPress, periodo_id, onEliminad
           <View
             style={[
               styles.barraRelleno,
-              {
-                width: `${pct}%`,
-                backgroundColor: sobre ? '#ef4444' : '#22c55e',
-              },
+              { width: `${pct}%`, backgroundColor: sobre ? '#ef4444' : '#22c55e' },
             ]}
           />
+        </View>
+      )}
+
+      {(onSubir || onBajar) && (
+        <View style={styles.ordenFila}>
+          <TouchableOpacity
+            onPress={(e) => { e.stopPropagation(); onSubir?.(); }}
+            style={[styles.btnOrden, !onSubir && styles.btnOrdenDisabled]}
+            disabled={!onSubir}
+          >
+            <Text style={styles.btnOrdenTexto}>▲</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={(e) => { e.stopPropagation(); onBajar?.(); }}
+            style={[styles.btnOrden, !onBajar && styles.btnOrdenDisabled]}
+            disabled={!onBajar}
+          >
+            <Text style={styles.btnOrdenTexto}>▼</Text>
+          </TouchableOpacity>
         </View>
       )}
     </TouchableOpacity>
@@ -90,12 +107,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     flex: 1,
   },
-  nombre: {
-    flex: 1,
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#1e293b',
-  },
   montos: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -116,10 +127,6 @@ const styles = StyleSheet.create({
   esperado: {
     fontSize: 13,
     color: '#64748b',
-  },
-  estado: {
-    fontSize: 12,
-    marginLeft: 4,
   },
   btnEliminar: {
     paddingLeft: 4,
@@ -144,5 +151,24 @@ const styles = StyleSheet.create({
   barraRelleno: {
     height: 4,
     borderRadius: 2,
+  },
+  ordenFila: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 6,
+    marginTop: 6,
+  },
+  btnOrden: {
+    backgroundColor: '#e0e7ff',
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  btnOrdenDisabled: {
+    opacity: 0.3,
+  },
+  btnOrdenTexto: {
+    color: '#6366f1',
+    fontWeight: '700',
   },
 });

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Host, Button, View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { obtenerResumenCategorias } from '../src/db/queries/producto_periodo';
@@ -11,13 +11,15 @@ import ResumenItem from '../src/components/ResumenItem';
 import { obtenerGastoEsperadoTodasCategorias, obtenerGastoTodasCategorias } from '../src/db/queries/categorias';
 import Toast from 'react-native-toast-message';
 import CategoriasModal from '../src/components/CategoriasModal';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import EditarPresupuestos from '../src/components/EditarPresupuestosModal';
 
 export default function HomeScreen() {
   const router = useRouter();
   const [periodos, setPeriodos] = useState([]);
   const [periodoIdx, setPeriodoIdx] = useState(0);
   const [resumen, setResumen] = useState([]);
+  const [gastosOrdenados, setGastosOrdenados] = useState([]);
   const [totalIngresos, setTotalIngresos] = useState(0);
   const [totalEstimado, setTotalEstimado] = useState(0);
   const [totalGastado, setTotalGastado] = useState(0);
@@ -71,15 +73,54 @@ export default function HomeScreen() {
     }
   }
 
-  function cargarResumen(periodo_id) {
+  async function cargarResumen(periodo_id) {
     const datos = obtenerResumenCategorias(periodo_id);
     setResumen(datos);
 
+    const gastos = datos.filter(d => d.categoria_id !== 1);
+    const ordenados = await cargarOrden(gastos, periodo_id);
+    setGastosOrdenados(ordenados);
+
     const ingresos = datos.find(d => d.categoria_id === 1);
     setTotalIngresos(ingresos?.monto_real ?? 0);
-
     setTotalEstimado(obtenerGastoEsperadoTodasCategorias(periodo_id));
     setTotalGastado(obtenerGastoTodasCategorias(periodo_id));
+  }
+
+  async function cargarOrden(data, periodo_id) {
+    try {
+      const raw = await AsyncStorage.getItem(`orden_categorias_${periodo_id}`);
+      if (!raw) return data;
+      const orden = JSON.parse(raw);
+      return [...data].sort((a, b) => orden.indexOf(a.categoria_id) - orden.indexOf(b.categoria_id));
+    } catch {
+      return data;
+    }
+  }
+
+  async function guardarOrden(data, periodo_id) {
+    try {
+      const orden = data.map(item => item.categoria_id);
+      await AsyncStorage.setItem(`orden_categorias_${periodo_id}`, JSON.stringify(orden));
+    } catch (e) {
+      console.error('Error guardando orden:', e);
+    }
+  }
+
+  function moverArriba(index) {
+    if (index === 0) return;
+    const nuevo = [...gastosOrdenados];
+    [nuevo[index - 1], nuevo[index]] = [nuevo[index], nuevo[index - 1]];
+    setGastosOrdenados(nuevo);
+    guardarOrden(nuevo, periodo?.id);
+  }
+
+  function moverAbajo(index) {
+    if (index === gastosOrdenados.length - 1) return;
+    const nuevo = [...gastosOrdenados];
+    [nuevo[index + 1], nuevo[index]] = [nuevo[index], nuevo[index + 1]];
+    setGastosOrdenados(nuevo);
+    guardarOrden(nuevo, periodo?.id);
   }
 
   function irAnterior() {
@@ -101,22 +142,11 @@ export default function HomeScreen() {
   }
 
   function mostrarAlerta() {
-    let mensaje = '';
-
     if (estimadoExcede) {
-      mensaje = 'El presupuesto estimado supera los ingresos';
-      Toast.show({
-        type: 'error',
-        text1: mensaje
-      });
+      Toast.show({ type: 'error', text1: 'El presupuesto estimado supera los ingresos' });
     }
-
     if (gastadoExcede) {
-      mensaje = 'El gasto real supera los ingresos';
-      Toast.show({
-        type: 'error',
-        text1: mensaje
-      });
+      Toast.show({ type: 'error', text1: 'El gasto real supera los ingresos' });
     }
   }
 
@@ -175,28 +205,36 @@ export default function HomeScreen() {
         </View>
       </TouchableOpacity>
 
-      <FlatList
-        data={resumen}
-        keyExtractor={(item) => String(item.categoria_id)}
-        renderItem={({ item }) => (
+      <ScrollView contentContainerStyle={styles.lista} showsVerticalScrollIndicator={false}>
+        {/* Ingresos fijo arriba */}
+        {resumen.filter(d => d.categoria_id === 1).map(item => (
           <ResumenItem
+            key={String(item.categoria_id)}
             categoria={item}
             periodo_id={periodo?.id}
             onEliminado={() => cargarResumen(periodo?.id)}
-            onPress={() => router.push(
-              `/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`
-            )}
+            onPress={() => router.push(`/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`)}
           />
+        ))}
 
-        )}
-        contentContainerStyle={styles.lista}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View>
-            <Text style={styles.vacio}>Sin datos para este Periodo</Text>
-          </View>
-        }
-      />
+        {/* Gastos con botones orden */}
+        {gastosOrdenados.map((item, index) => (
+          <ResumenItem
+            key={String(item.categoria_id)}
+            categoria={item}
+            periodo_id={periodo?.id}
+            onEliminado={() => cargarResumen(periodo?.id)}
+            onPress={() => router.push(`/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`)}
+            onSubir={index > 0 ? () => moverArriba(index) : null}
+            onBajar={index < gastosOrdenados.length - 1 ? () => moverAbajo(index) : null}
+          />
+        ))}
+      </ScrollView>
+
+      <EditarPresupuestos
+        periodo_id={periodo?.id}
+        onActualizado={() => cargarResumen(periodo?.id)} />
+
       <CategoriasModal periodo_id={periodo?.id} onCategoriaAgregada={cargarResumen} />
       <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
     </SafeAreaView>
@@ -236,6 +274,6 @@ const styles = StyleSheet.create({
   totalValor: { fontSize: 14, fontWeight: '700', color: '#0f172a' },
   rojo: { color: '#ef4444' },
   divisor: { width: 1, backgroundColor: '#f1f5f9', marginVertical: 4 },
-  lista: { paddingHorizontal: 16, paddingBottom: 20 },
+  lista: { paddingHorizontal: 16, paddingBottom: 100 },
   vacio: { textAlign: 'center', color: '#94a3b8', marginTop: 40, fontSize: 15 },
 });

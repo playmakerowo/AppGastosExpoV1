@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { obtenerCategorias } from '../db/queries/categorias';
 import { unirCategoriaPeriodo } from '../db/queries/categorias';
 import NuevaCategoriaModal from './NuevaCategoriaModal';
-import EditarPresupuestos from './EditarPresupuestosModal';
 
 export default function Categorias({ periodo_id, onCategoriaAgregada }) {
   const [categorias, setCategorias] = useState([]);
@@ -16,8 +15,6 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
 
   return (
     <View>
-      <EditarPresupuestos periodo_id={periodo_id} />
-
       <TouchableOpacity
         style={styles.button}
         onPress={() => setModalVisible(true)}

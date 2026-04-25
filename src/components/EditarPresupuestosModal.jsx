@@ -4,8 +4,9 @@ import { obtenerCategorias, actualizarMontoEsperadoCategoria } from '../db/queri
 import { obtenerResumenCategorias } from '../db/queries/producto_periodo';
 import SelectorCantidadModal from './SelectorCantidadModal';
 import Toast from 'react-native-toast-message';
+import { formatCLP } from '../utils/calculos';
 
-export default function EditarPresupuestos({ periodo_id }) {
+export default function EditarPresupuestos({ periodo_id, onActualizado }) {
   const [categorias, setCategorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const datos = obtenerResumenCategorias(periodo_id);
@@ -20,6 +21,7 @@ export default function EditarPresupuestos({ periodo_id }) {
   function guardarMontoEsperado(categoria_id, val) {
     try {
       actualizarMontoEsperadoCategoria(categoria_id, periodo_id, parseInt(val) || 0);
+      onActualizado?.();
       Toast.show({ type: 'success', text1: 'Presupuesto actualizado' });
     } catch (e) {
       Toast.show({ type: 'error', text1: 'No se pudo guardar' });
@@ -72,12 +74,10 @@ export default function EditarPresupuestos({ periodo_id }) {
                         <Text style={[styles.campoLabel,
                         !esIngreso && item.monto_real > item.monto_esperado && styles.rojo,
                         esIngreso && item.monto_real < item.monto_esperado && styles.rojo
-                        ]}>{esIngreso ? 'Ingresos actuales' : 'Gasto actual'}</Text>
-                        <SelectorCantidadModal
-                          value={item.monto_real}
-                          esDinero={true}
-                          onChange={(val) => console.log('presupuesto:', val)}
-                        />
+                        ]}>
+                          {esIngreso ? 'Ingresos actuales' : 'Gasto actual'}
+                        </Text>
+                        <Text style={styles.montoReal}>{formatCLP(item.monto_real)}</Text>
                       </View>
                     </View>
                   </View>
@@ -108,6 +108,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     padding: 20,
+  },
+  montoReal: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0f172a',
+    paddingVertical: 10,
+    textAlign: 'center',
   },
   rojo: {
     color: '#ef4444',
