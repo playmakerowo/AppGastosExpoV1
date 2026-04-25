@@ -103,7 +103,7 @@ export default function CategoriaScreen() {
         data={productos}
         keyExtractor={(item) => String(item.id)}
         renderItem={({ item }) => (
-          <ProductoRow producto={item} onChange={handleCambio} />
+          <ProductoRow producto={item} periodo_id={periodo_id} onChange={handleCambio} onDelete={cargarProductos} />
         )}
         contentContainerStyle={styles.lista}
         showsVerticalScrollIndicator={false}

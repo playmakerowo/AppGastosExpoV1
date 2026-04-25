@@ -1,10 +1,47 @@
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { formatCLP } from '../utils/calculos';
 import SelectorCantidadModal from './SelectorCantidadModal';
+import Toast from 'react-native-toast-message';
+import { eliminarProductoPeriodo } from '../db/queries/producto_periodo';
 
-export default function ProductoRow({ producto, onChange }) {
+export default function ProductoRow({ producto, periodo_id, onChange, onDelete }) {
   const { nombre, cantidad, precio_unitario } = producto;
   const montoReal = (parseInt(cantidad) || 0) * (parseInt(precio_unitario) || 0);
+
+  function confirmarEliminacion() {
+    Alert.alert(
+      'Eliminar producto',
+      `¿Seguro que quieres eliminar "${nombre}"?`,
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: EliminarProducto, // 🔥 ejecuta tu función real
+        },
+      ],
+      { cancelable: true }
+    );
+  }
+
+  function EliminarProducto() {
+    try {
+      var result = eliminarProductoPeriodo(producto.producto_id, periodo_id);
+      if (result > 0) {
+        Toast.show({ type: 'success', text1: 'Se removio el produto ' + nombre });
+
+        onDelete(producto);
+
+        return
+      }
+      Toast.show({ type: 'error', text1: 'No se pudo remover el producto' });
+    } catch (e) {
+      Toast.show({ type: 'error', text1: 'No se pudo remover el producto' });
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -30,6 +67,9 @@ export default function ProductoRow({ producto, onChange }) {
           <Text style={styles.label}>Total</Text>
           <Text style={styles.totalValor}>{formatCLP(montoReal)}</Text>
         </View>
+        <TouchableOpacity onPress={confirmarEliminacion} style={styles.btnEliminar}>
+          <Text style={styles.btnEliminarTexto}>✕</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -99,5 +139,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#0f172a',
+  },
+  btnEliminar: {
+    paddingLeft: 4,
+    paddingRight: 4,
+    backgroundColor: '#e6e3e3',
+    borderRadius: 4,
+    marginLeft: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnEliminarTexto: {
+    color: '#fa0000',
+    fontSize: 19,
+    fontWeight: '700',
   },
 });

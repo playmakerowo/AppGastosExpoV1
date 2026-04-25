@@ -1,6 +1,5 @@
 import { getDB } from '../database';
 
-// Obtener todos los productos de un periodo con su info calculada
 export function obtenerProductosPeriodo(periodo_id) {
   console.log('[obtenerProductosPeriodo] INICIO', { periodo_id });
 
@@ -26,7 +25,6 @@ export function obtenerProductosPeriodo(periodo_id) {
   }
 }
 
-// Obtener productos de una categoría en un periodo
 export function obtenerProductosPorCategoria(periodo_id, categoria_id) {
   console.log('[obtenerProductosPorCategoria] INICIO', {
     periodo_id,
@@ -55,7 +53,6 @@ export function obtenerProductosPorCategoria(periodo_id, categoria_id) {
   }
 }
 
-// Agregar producto a un periodo
 export function agregarProductoPeriodo(
   producto_id,
   periodo_id,
@@ -82,7 +79,21 @@ export function agregarProductoPeriodo(
   }
 }
 
-// Actualizar valores de un producto en el periodo
+export function eliminarProductoPeriodo(producto_id, periodo_id) {
+
+  console.log('[eliminarProductoPeriodo] producto_id:', producto_id, ' periodo:',periodo_id);
+  const db = getDB();
+  try {
+    const result = db.runSync('DELETE FROM producto_periodo WHERE producto_id = ? AND periodo_id = ?', [producto_id, periodo_id]);
+    console.log('[eliminarProductoPeriodo] Datos modificados', result.changes);
+
+    return result.changes;
+  } catch (error) {
+    console.error('[eliminarProductoPeriodo] ERROR', error);
+    throw error;
+  }
+}
+
 export function actualizarProductoPeriodo(
   id,
   cantidad,
