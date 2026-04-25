@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
 import { obtenerProductos } from '../db/queries/productos';
 import { agregarProductoPeriodo } from '../db/queries/producto_periodo';
@@ -8,11 +8,11 @@ import Toast from 'react-native-toast-message';
 export default function ProductosModal({ categoria_id, periodo_id, onProductoAgregado }) {
   const [productos, setProductos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [busqueda, setBusqueda] = useState('');
 
   useEffect(() => {
     const lista = obtenerProductos(categoria_id);
     setProductos(lista);
-    console.log("[obtenerProductos] categoria", categoria_id, " Al periodo", periodo_id, " Lista productos", lista)
   }, []);
 
   return (
@@ -34,8 +34,15 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
 
             <Text style={styles.modalTitulo}>Productos</Text>
 
+            <TextInput
+              style={styles.buscador}
+              placeholder="🔍 Buscar producto..."
+              value={busqueda}
+              onChangeText={setBusqueda}
+            />
+
             <FlatList
-              data={productos}
+              data={productos.filter(p => p.nombre.toLowerCase().includes(busqueda.toLowerCase()))}
               keyExtractor={(item) => String(item.id)}
               renderItem={({ item }) => (
                 <TouchableOpacity
@@ -44,11 +51,13 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
                     try {
                       agregarProductoPeriodo(item.id, parseInt(periodo_id), 1, 0, 0);
                       setModalVisible(false);
+                      setBusqueda('');
                       onProductoAgregado?.();
                     } catch (error) {
                       setModalVisible(false);
+                      setBusqueda('');
                       setTimeout(() => {
-                        Toast.show({ type: 'error', text1: item.nombre +' ya agregado previamente' });
+                        Toast.show({ type: 'error', text1: item.nombre + ' ya agregado previamente' });
                       }, 300);
                     }
                   }}
@@ -71,7 +80,10 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
 
             <TouchableOpacity
               style={[styles.button, styles.buttonSecondary]}
-              onPress={() => setModalVisible(false)}
+              onPress={() => {
+                setBusqueda('');
+                setModalVisible(false);
+              }}
             >
               <Text style={styles.buttonText}>Cerrar</Text>
             </TouchableOpacity>
@@ -101,12 +113,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  buscador: {
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 15,
+    marginBottom: 10,
+    backgroundColor: '#f8fafc',
+    color: '#0f172a',
+  },
   item: {
     padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
-
   button: {
     backgroundColor: '#6366f1',
     padding: 12,
@@ -114,13 +135,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 5,
   },
-
   buttonSecondary: {
     backgroundColor: '#94a3b8',
   },
-
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  vacio: {
+    textAlign: 'center',
+    color: '#94a3b8',
+    padding: 20,
   },
 });

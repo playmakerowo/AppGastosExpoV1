@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
-import { obtenerCategorias } from '../db/queries/categorias';
-import { unirCategoriaPeriodo } from '../db/queries/categorias';
+import { obtenerCategorias, unirCategoriaPeriodo } from '../db/queries/categorias';
 import NuevaCategoriaModal from './NuevaCategoriaModal';
 
 export default function Categorias({ periodo_id, onCategoriaAgregada }) {
   const [categorias, setCategorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [busqueda, setBusqueda] = useState('');
 
   useEffect(() => {
     const lista = obtenerCategorias();
@@ -32,17 +32,24 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
 
             <Text style={styles.modalTitulo}>Categorías</Text>
 
+            <TextInput
+              style={styles.buscador}
+              placeholder="🔍 Buscar categoría..."
+              value={busqueda}
+              onChangeText={setBusqueda}
+            />
+
             <FlatList
-              data={categorias}
+              data={categorias.filter(c => c.nombre.toLowerCase().includes(busqueda.toLowerCase()))}
               keyExtractor={(item) => String(item.id)}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.item}
                   onPress={() => {
-                    console.log("agregar categoria:" + item.nombre + " Periodo:" + periodo_id);
                     try {
                       unirCategoriaPeriodo(item.id, periodo_id);
                       setModalVisible(false);
+                      setBusqueda('');
                       onCategoriaAgregada?.(periodo_id);
                     } catch (error) {
                       Alert.alert('Error', 'No se pudo agregar la categoría');
@@ -66,7 +73,10 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
 
             <TouchableOpacity
               style={[styles.button, styles.buttonSecondary]}
-              onPress={() => setModalVisible(false)}
+              onPress={() => {
+                setBusqueda('');
+                setModalVisible(false);
+              }}
             >
               <Text style={styles.buttonText}>Cerrar</Text>
             </TouchableOpacity>
@@ -77,20 +87,6 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
     </View>
   );
 }
-
-function crearNuevaCategoria() {
-  Alert.alert(
-    'Crear categoria',
-    `¿Crear nueva categoria?`,
-    [
-      { text: 'Cancelar', style: 'cancel' },
-      {
-        text: 'Crear'
-      },
-    ]
-  );
-}
-
 
 const styles = StyleSheet.create({
   modalOverlay: {
@@ -110,12 +106,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  buscador: {
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 15,
+    marginBottom: 10,
+    backgroundColor: '#f8fafc',
+    color: '#0f172a',
+  },
   item: {
     padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
-
   button: {
     backgroundColor: '#6366f1',
     padding: 12,
@@ -123,13 +128,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 5,
   },
-
   buttonSecondary: {
     backgroundColor: '#94a3b8',
   },
-
   buttonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  vacio: {
+    textAlign: 'center',
+    color: '#94a3b8',
+    padding: 20,
   },
 });
