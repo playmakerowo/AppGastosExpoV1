@@ -110,13 +110,7 @@ export default function CategoriaScreen() {
       />
 
       <ProductosModal categoria_id={id} periodo_id={periodo_id} onProductoAgregado={cargarProductos} />
-
-      {hayEdiciones && (
-        <TouchableOpacity style={styles.button} onPress={guardarTodo}>
-          <Text style={styles.btnText}>Guardar cambios</Text>
-        </TouchableOpacity>
-      )}
-
+      
       <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
     </SafeAreaView>
   );

@@ -1,13 +1,15 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
-import { obtenerCategorias } from '../db/queries/categorias';
-import { unirCategoriaPeriodo } from '../db/queries/categorias';
-import NuevaCategoriaModal from './NuevaCategoriaModal';
-import EditarPresupuestos from './EditarPresupuestosModal';
+import { obtenerCategorias, unirCategoriaPeriodo } from '../db/queries/categorias';
+import { obtenerResumenCategorias } from '../db/queries/producto_periodo';
+import SelectorCantidadModal from './SelectorCantidadModal';
 
-export default function Categorias({ periodo_id, onCategoriaAgregada }) {
+export default function EditarPresupuestos({ periodo_id }) {
   const [categorias, setCategorias] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const datos = obtenerResumenCategorias(periodo_id);
+  console.log('[EditarPresupuestos] Categorias:', datos);
+  
 
   useEffect(() => {
     const lista = obtenerCategorias();
@@ -16,13 +18,11 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
 
   return (
     <View>
-      <EditarPresupuestos periodo_id={periodo_id} />
-
       <TouchableOpacity
         style={styles.button}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.buttonText}>Agregar categoria</Text>
+        <Text style={styles.buttonText}>Editar presupuestos</Text>
       </TouchableOpacity>
 
       <Modal
@@ -33,47 +33,33 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
 
-            <Text style={styles.modalTitulo}>Categorías</Text>
+            <Text style={styles.modalTitulo}>Editar presupuestos</Text>
 
             <FlatList
-              data={categorias}
-              keyExtractor={(item) => String(item.id)}
+              data={datos}
+              keyExtractor={(item) => String(item.categoria_id)}
               renderItem={({ item }) => (
-                <TouchableOpacity
+                <View
                   style={styles.item}
-                  onPress={() => {
-                    console.log("agregar categoria:" + item.nombre + " Periodo:" + periodo_id);
-                    try {
-                      unirCategoriaPeriodo(item.id, periodo_id);
-                      setModalVisible(false);
-                      onCategoriaAgregada?.(periodo_id);
-                    } catch (error) {
-                      Alert.alert('Error', 'No se pudo agregar la categoría');
-                    }
-                  }}
+                  onPress={() => {console.log("Editar presupuesto: ", item.categoria)}}
                 >
-                  <Text>{item.icono} {item.nombre}</Text>
-                </TouchableOpacity>
+                  <Text>{item.icono} {item.categoria}</Text>
+                  <Text>
+                    <SelectorCantidadModal value={item.monto_esperado}/>/
+                    <SelectorCantidadModal value={item.monto_real}/>
+                  </Text>
+                </View>
               )}
               ListEmptyComponent={
                 <Text style={styles.vacio}>Sin categorías</Text>
               }
             />
-
-            <NuevaCategoriaModal
-              onCategoriaCreada={() => {
-                const lista = obtenerCategorias();
-                setCategorias(lista);
-              }}
-            />
-
             <TouchableOpacity
               style={[styles.button, styles.buttonSecondary]}
               onPress={() => setModalVisible(false)}
             >
               <Text style={styles.buttonText}>Cerrar</Text>
             </TouchableOpacity>
-
           </View>
         </View>
       </Modal>

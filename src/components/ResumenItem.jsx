@@ -42,13 +42,14 @@ export default function ResumenItem({ categoria, onPress, periodo_id, onEliminad
             <>
               <Text style={styles.separador}>/</Text>
               <Text style={styles.esperado}>{formatCLP(monto_esperado)}</Text>
+
+              <TouchableOpacity onPress={eliminar} style={styles.btnEliminar}>
+                <Text style={styles.btnEliminarTexto}>✕</Text>
+              </TouchableOpacity>
             </>
           )}
         </View>
 
-        <TouchableOpacity onPress={eliminar} style={styles.btnEliminar}>
-          <Text style={styles.btnEliminarTexto}>✕</Text>
-        </TouchableOpacity>
       </View>
 
       {!esIngreso && (
