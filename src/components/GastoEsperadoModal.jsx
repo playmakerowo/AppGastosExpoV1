@@ -4,7 +4,7 @@ import { obtenerGastoEsperado } from '../db/queries/categorias';
 import { actualizarMontoEsperadoCategoria } from '../db/queries/categorias';
 import Toast from 'react-native-toast-message';
 
-export default function GastoEsperadoModal({ categoria_id, periodo_id, onActualizado }) {
+export default function GastoEsperadoModal({ categoria_id, periodo_id, onActualizado, pasos }) {
   const [gastoEsperado, setGastoEsperado] = useState('0');
   const [modalVisible, setModalVisible] = useState(false);
   const [cantidadOriginal, setcantidadOriginal] = useState(gastoEsperado ?? 0);
@@ -14,6 +14,17 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
     setGastoEsperado(String(montoEstimado));
     setcantidadOriginal(String(montoEstimado));
   }, []);
+
+  const pasosDefault = [
+    { valor: -10, texto: '-10' },
+    { valor: -1, texto: '-1' },
+    { valor: 1, texto: '+1' },
+    { valor: 10, texto: '+10' },
+  ];
+
+  const listaPasos = pasos ?? pasosDefault;
+  const fila1 = listaPasos.slice(0, 4);
+  const fila2 = listaPasos.slice(4, 8);
 
   function ajustar(delta) {
     setGastoEsperado(prev => String(Math.max(0, (parseInt(prev) || 0) + delta)));
@@ -57,19 +68,22 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
             />
 
             <View style={styles.fila}>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-100000)}>
-                <Text style={styles.btnText}>-100k</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-10000)}>
-                <Text style={styles.btnText}>-10k</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(10000)}>
-                <Text style={styles.btnText}>+10k</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(100000)}>
-                <Text style={styles.btnText}>+100k</Text>
-              </TouchableOpacity>
+              {fila1.map((p) => (
+                <TouchableOpacity key={p.texto} style={styles.btn} onPress={() => ajustar(p.valor)}>
+                  <Text style={styles.btnText}>{p.texto}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
+
+            {fila2.length > 0 && (
+              <View style={styles.fila}>
+                {fila2.map((p) => (
+                  <TouchableOpacity key={p.texto} style={styles.btn} onPress={() => ajustar(p.valor)}>
+                    <Text style={styles.btnText}>{p.texto}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
 
             <TouchableOpacity style={styles.btnConfirmar} onPress={guardar}>
               <Text style={styles.btnConfirmarText}>Guardar</Text>

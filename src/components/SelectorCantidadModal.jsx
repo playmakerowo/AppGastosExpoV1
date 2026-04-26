@@ -1,8 +1,13 @@
 import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatCLP } from '../utils/calculos';
 
 export default function SelectorCantidadModal({ value, onChange, esDinero, pasos }) {
+
+  useEffect(() => {
+    setCantidad(value ?? 0);
+    setcantidadOriginal(value ?? 0);
+  }, [value]);
 
   const pasosDefault = [
     { valor: -10, texto: '-10' },
