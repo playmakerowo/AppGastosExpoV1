@@ -142,7 +142,7 @@ export default function CategoriaScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#d7dbdf',
   },
   resumenCard: {
     flexDirection: 'row',

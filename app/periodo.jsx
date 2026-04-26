@@ -200,7 +200,7 @@ export default function PeriodoScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f8fafc' },
+  safe: { flex: 1, backgroundColor: '#d7dbdf' },
 
   lista: { padding: 16 },
 
