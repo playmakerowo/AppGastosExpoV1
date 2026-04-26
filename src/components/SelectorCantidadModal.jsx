@@ -2,7 +2,18 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, TextInput, Alert } fro
 import { useState } from 'react';
 import { formatCLP } from '../utils/calculos';
 
-export default function SelectorCantidadModal({ value, onChange, esDinero }) {
+export default function SelectorCantidadModal({ value, onChange, esDinero, pasos }) {
+
+  const pasosDefault = [
+    { valor: -10, texto: '-10' },
+    { valor: -1, texto: '-1' },
+    { valor: 1, texto: '+1' },
+    { valor: 10, texto: '+10' },
+  ];
+
+  const listaPasos = pasos ?? pasosDefault;
+  const fila1 = listaPasos.slice(0, 4);
+  const fila2 = listaPasos.slice(4, 8);
   const [modalVisible, setModalVisible] = useState(false);
   const [cantidadOriginal, setcantidadOriginal] = useState(value ?? 0);
   const [cantidad, setCantidad] = useState(value ?? 0);
@@ -58,33 +69,22 @@ export default function SelectorCantidadModal({ value, onChange, esDinero }) {
             />
 
             <View style={styles.fila}>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-10)}>
-                <Text style={styles.btnText}>-10</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-1)}>
-                <Text style={styles.btnText}>-1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(1)}>
-                <Text style={styles.btnText}>+1</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(10)}>
-                <Text style={styles.btnText}>+10</Text>
-              </TouchableOpacity>
+              {fila1.map((p) => (
+                <TouchableOpacity key={p.texto} style={styles.btn} onPress={() => ajustar(p.valor)}>
+                  <Text style={styles.btnText}>{p.texto}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
-            <View style={styles.fila}>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-10000)}>
-                <Text style={styles.btnText}>-10k</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(-1000)}>
-                <Text style={styles.btnText}>-1k</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(1000)}>
-                <Text style={styles.btnText}>+1k</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.btn} onPress={() => ajustar(10000)}>
-                <Text style={styles.btnText}>+10k</Text>
-              </TouchableOpacity>
-            </View>
+
+            {fila2.length > 0 && (
+              <View style={styles.fila}>
+                {fila2.map((p) => (
+                  <TouchableOpacity key={p.texto} style={styles.btn} onPress={() => ajustar(p.valor)}>
+                    <Text style={styles.btnText}>{p.texto}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
 
             <TouchableOpacity style={styles.btnConfirmar} onPress={confirmar}>
               <Text style={styles.btnConfirmarText}>Confirmar</Text>

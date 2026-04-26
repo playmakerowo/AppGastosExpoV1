@@ -61,6 +61,17 @@ export default function ProductoRow({ producto, periodo_id, onChange, onDelete }
           <Text style={styles.label}>Precio</Text>
           <SelectorCantidadModal
             value={precio_unitario}
+            pasos={[
+              { valor: -10000, texto: '-10k' },
+              { valor: -1000, texto: '-1k' },
+              { valor: 1000, texto: '+1k' },
+              { valor: 10000, texto: '+10k' },
+
+              { valor: -1000000, texto: '-1M' },
+              { valor: -100000, texto: '-100k' },
+              { valor: 100000, texto: '+100k' },
+              { valor: 1000000, texto: '+1M' },
+            ]}
             onChange={(cantidad) => onChange({ ...producto, precio_unitario: cantidad })}
           />
         </View>

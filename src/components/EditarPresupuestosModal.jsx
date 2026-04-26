@@ -67,6 +67,17 @@ export default function EditarPresupuestos({ periodo_id, onActualizado }) {
                         <SelectorCantidadModal
                           value={item.monto_esperado}
                           esDinero={true}
+                          pasos={[
+                            { valor: -10000, texto: '-10k' },
+                            { valor: -1000, texto: '-1k' },
+                            { valor: 1000, texto: '+1k' },
+                            { valor: 10000, texto: '+10k' },
+
+                            { valor: -1000000, texto: '-1M' },
+                            { valor: -100000, texto: '-100k' },
+                            { valor: 100000, texto: '+100k' },
+                            { valor: 1000000, texto: '+1M' },
+                          ]}
                           onChange={(val) => guardarMontoEsperado(item.categoria_id, val)}
                         />
                       </View>
