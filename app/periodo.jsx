@@ -24,11 +24,15 @@ function copiarPeriodo(periodoOrigenId, periodoDestinoId) {
   const productos = obtenerProductosPeriodo(periodoOrigenId);
 
   productos.forEach(p => {
+    var precio_unitario = 0
+    if (p.producto_id == 1) {
+      precio_unitario = p.precio_unitario
+    }
     agregarProductoPeriodo(
       p.producto_id,
       periodoDestinoId,
       p.cantidad,
-      p.precio_unitario,
+      precio_unitario,
       p.monto_esperado
     );
   });
@@ -142,12 +146,13 @@ export default function PeriodoScreen() {
 
             {/* SWITCH */}
             <View style={styles.switchRow}>
-              <Text style={styles.switchText}>Copiar mes anterior</Text>
-
-              <Switch
-                value={copiarMesPasado}
-                onValueChange={setCopiarMesPasado}
-              />
+              <Text style={styles.switchText}>Copiar estimados e ingresos del periodo anterior</Text>
+              <View style={{ minWidth: 50 }}>
+                <Switch
+                  value={copiarMesPasado}
+                  onValueChange={setCopiarMesPasado}
+                />
+              </View>
             </View>
 
             {/* BOTONES */}
@@ -207,7 +212,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+    gap: 12,
+  },
+  switchText: {
+    fontSize: 14,
+    flex: 1,
+    flexWrap: 'wrap',
+    maxWidth: 180
+  },
   mesTexto: { fontSize: 16, fontWeight: '500' },
 
   badge: {
@@ -258,10 +275,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 10,
-  },
-
-  switchText: {
-    fontSize: 14,
   },
 
   actions: {

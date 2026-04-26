@@ -79,14 +79,14 @@ export function agregarProductoPeriodo(
   }
 }
 
-export function eliminarProductoPeriodo(producto_id, periodo_id) {
-
-  console.log('[eliminarProductoPeriodo] producto_id:', producto_id, ' periodo:',periodo_id);
+export function eliminarProductoPeriodo(id, producto_id, periodo_id) {
+  console.log('[eliminarProductoPeriodo] Id:',id, 'producto_id:', producto_id, ' periodo:',periodo_id);
   const db = getDB();
-  try {
-    const result = db.runSync('DELETE FROM producto_periodo WHERE producto_id = ? AND periodo_id = ?', [producto_id, periodo_id]);
-    console.log('[eliminarProductoPeriodo] Datos modificados', result.changes);
 
+  try {
+    const result = db.runSync('DELETE FROM producto_periodo WHERE id = ? AND producto_id = ? AND periodo_id = ?', [id ,producto_id, periodo_id]);
+    console.log('[eliminarProductoPeriodo] Datos modificados', result.changes);
+    
     return result.changes;
   } catch (error) {
     console.error('[eliminarProductoPeriodo] ERROR', error);

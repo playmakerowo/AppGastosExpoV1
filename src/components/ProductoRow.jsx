@@ -7,6 +7,7 @@ import { eliminarProductoPeriodo } from '../db/queries/producto_periodo';
 export default function ProductoRow({ producto, periodo_id, onChange, onDelete }) {
   const { nombre, cantidad, precio_unitario } = producto;
   const montoReal = (parseInt(cantidad) || 0) * (parseInt(precio_unitario) || 0);
+  console.log("[PRODUCTOROW] producto: ", producto)
 
   function confirmarEliminacion() {
     Alert.alert(
@@ -29,7 +30,7 @@ export default function ProductoRow({ producto, periodo_id, onChange, onDelete }
 
   function EliminarProducto() {
     try {
-      var result = eliminarProductoPeriodo(producto.producto_id, periodo_id);
+      var result = eliminarProductoPeriodo(producto.id, producto.producto_id, periodo_id);
       if (result > 0) {
         Toast.show({ type: 'success', text1: 'Se removio el produto ' + nombre });
 
