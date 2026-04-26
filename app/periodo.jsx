@@ -11,6 +11,7 @@ import {
   Switch
 } from 'react-native';
 
+import { mesActual } from '../src/utils/calculos';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -108,7 +109,9 @@ export default function PeriodoScreen() {
             router.push(`/?periodo_id=${item.id}`);
           }}>
             <Text style={styles.mesTexto}>{formatMes(item.mes)}</Text>
-            {index === 0 && <Text style={styles.badge}>Actual</Text>}
+            {item.mes === mesActual() && (
+              <Text style={styles.badge}>Actual</Text>
+            )}
           </TouchableOpacity>
         )}
         contentContainerStyle={styles.lista}
