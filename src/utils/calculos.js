@@ -1,6 +1,5 @@
 import { existePeriodo } from "../db/queries/periodos";
 
-// Formato pesos chilenos: 180000 → "$180.000"
 export function formatCLP(valor, conSimbolo = true) {
   const num = parseInt(valor) || 0;
   return new Intl.NumberFormat('es-CL', {

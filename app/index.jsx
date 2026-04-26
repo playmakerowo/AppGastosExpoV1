@@ -14,6 +14,7 @@ import CategoriasModal from '../src/components/CategoriasModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EditarPresupuestos from '../src/components/EditarPresupuestosModal';
 import { useLocalSearchParams } from 'expo-router';
+import ReportesModal from '../src/components/GraficoTorta';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -217,6 +218,16 @@ export default function HomeScreen() {
         </View>
       </TouchableOpacity>
 
+      <ReportesModal
+        periodo_id={periodo?.id}
+        datos={resumen.map(d => ({
+          nombre: d.categoria,
+          valor: d.monto_real,
+          esperado: d.monto_esperado,
+          categoria_id: d.categoria_id,
+        }))}
+      />
+      
       <ScrollView contentContainerStyle={styles.lista} showsVerticalScrollIndicator={false}>
         {/* Ingresos fijo arriba */}
         {resumen.filter(d => d.categoria_id === 1).map(item => (

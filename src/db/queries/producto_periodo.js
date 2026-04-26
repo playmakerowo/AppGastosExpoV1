@@ -153,3 +153,22 @@ export function obtenerResumenCategorias(periodo_id) {
     throw error;
   }
 }
+
+export function obtenerProductosMasComprados(periodo_id) {
+  const db = getDB();
+  try {
+    const result = db.getAllSync(
+      `SELECT p.nombre, pp.cantidad AS valor
+       FROM producto_periodo pp
+       JOIN productos p ON p.id = pp.producto_id
+       JOIN productos prod ON prod.id = pp.producto_id
+       WHERE pp.periodo_id = ? AND prod.categoria_id != 1
+       ORDER BY pp.cantidad DESC`,
+      [periodo_id]
+    );
+    return result;
+  } catch (error) {
+    console.error('[obtenerProductosMasComprados] ERROR', error);
+    throw error;
+  }
+}
