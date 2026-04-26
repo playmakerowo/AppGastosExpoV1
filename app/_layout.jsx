@@ -5,27 +5,41 @@ import { initDB } from '../src/db/database';
 import { seedCategorias } from '../src/utils/seedData';
 import { verificarPeriodoActual } from '../src/utils/calculos';
 import { formatMes } from '../src/utils/calculos';
+import ModalCrearPeriodo from '../src/components/CrearPeriodosModal';
+import { useRouter } from 'expo-router';
 
 export default function RootLayout() {
   const [listo, setListo] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mesDetectado, setMesDetectado] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     async function setup() {
       try {
         await initDB();
         seedCategorias();
+        const hogarId = 1;
+        setTimeout(() => {
+          const estado = verificarPeriodoActual(hogarId);
 
-        // 👇 AQUÍ VA TU LÓGICA
-        const hogarId = 1; // ajusta esto según tu app
-        const estado = verificarPeriodoActual(hogarId);
-
-        if (estado.estado === 'ok') {
-          Alert.alert('Correcto', `Ya hay un periodo para el mes actual: ${formatMes(estado.actual)}`);
-        }
-
-        if (estado.estado === 'desactualizado') {
-          Alert.alert('Periodo desactualizado', `No existe un periodo para el mes actual: ${formatMes(estado.actual)}`);
-        }
+          if (estado.estado === 'faltante') {
+            Alert.alert(
+              'Periodo desactualizado',
+              `No existe un periodo para el mes actual: ${formatMes(estado.actual)}`,
+              [
+                { text: 'Cancelar', style: 'cancel' },
+                {
+                  text: 'Crear',
+                  onPress: () => {
+                    setMesDetectado(estado.actual);
+                    setMostrarModal(true);
+                  }
+                }
+              ]
+            );
+          }
+        }, 3000);
 
       } catch (e) {
         console.error('Error inicializando DB:', e);
@@ -46,17 +60,32 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: { backgroundColor: '#6366f1' },
-        headerTintColor: '#fff',
-        headerTitleStyle: { fontWeight: '600' },
-      }}
-    >
-      <Stack.Screen name="index" options={{ title: 'Mi Presupuesto' }} />
-      <Stack.Screen name="periodo" options={{ title: 'Periodos' }} />
-      <Stack.Screen name="categoria/[id]" options={{ title: 'Detalle' }} />
-    </Stack>
+    <>
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: '#6366f1' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: '600' },
+        }}
+      >
+        <Stack.Screen name="index" options={{ title: 'Mi Presupuesto' }} />
+        <Stack.Screen name="periodo" options={{ title: 'Periodos' }} />
+        <Stack.Screen name="categoria/[id]" options={{ title: 'Detalle' }} />
+      </Stack>
+
+      <ModalCrearPeriodo
+        visible={mostrarModal}
+        hogarId={1}
+        mes={mesDetectado}
+        onClose={(creado) => {
+          setMostrarModal(false);
+
+          if (creado) {
+            router.replace('/');
+          }
+        }}
+      />
+    </>
   );
 }
 

@@ -19,6 +19,7 @@ import { obtenerHogares } from '../src/db/queries/hogares';
 import { obtenerProductosPeriodo, agregarProductoPeriodo } from '../src/db/queries/producto_periodo';
 import { getDB } from '../src/db/database';
 import { formatMes } from '../src/utils/calculos';
+import ModalCrearPeriodo from '../src/components/CrearPeriodosModal';
 
 function copiarPeriodo(periodoOrigenId, periodoDestinoId) {
   const productos = obtenerProductosPeriodo(periodoOrigenId);
