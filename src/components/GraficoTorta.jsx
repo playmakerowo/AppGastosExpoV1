@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { useState } from 'react';
 import { Svg, G, Path } from 'react-native-svg';
 import { formatCLP } from '../utils/calculos';
@@ -49,29 +49,11 @@ function GraficoTorta({ datos }) {
                         <View key={i} style={styles.leyendaItem}>
                             <View style={[styles.leyendaColor, { backgroundColor: s.color }]} />
                             <Text style={styles.leyendaNombre} numberOfLines={1}>{s.nombre}</Text>
-                            <Text style={styles.leyendaValor}>{formatCLP(s.valor)}</Text>
+                            <Text style={styles.leyendaValor}>{formatCLP(s.valor, false)}</Text>
                         </View>
                     ))}
                 </View>
             </ScrollView>
-        </View>
-    );
-}
-
-function ListaProductos({ datos }) {
-    if (!datos || datos.length === 0) {
-        return <Text style={styles.vacio}>Sin productos</Text>;
-    }
-
-    return (
-        <View>
-            {[...datos].sort((a, b) => b.valor - a.valor).map((item, index) => (
-                <View key={String(index)} style={styles.productoItem}>
-                    <Text style={styles.productoRank}>#{index + 1}</Text>
-                    <Text style={styles.productoNombre} numberOfLines={1}>{item.nombre}</Text>
-                    <Text style={styles.productoCantidad}>x{item.valor}</Text>
-                </View>
-            ))}
         </View>
     );
 }
@@ -108,14 +90,14 @@ export default function ReportesModal({ datos, periodo_id }) {
                         <Text style={styles.titulo}>Resumen del periodo</Text>
 
                         <View style={styles.filtros}>
-                            {['gastos', 'productos'].map(f => (
+                            {['gastos', 'Cantidad productos'].map(f => (
                                 <TouchableOpacity
                                     key={f}
                                     style={[styles.filtroBtn, filtro === f && styles.filtroActivo]}
                                     onPress={() => setFiltro(f)}
                                 >
                                     <Text style={[styles.filtroTexto, filtro === f && styles.filtroTextoActivo]}>
-                                        {f === 'gastos' ? 'Gastos' : 'Productos'}
+                                        {f === 'gastos' ? 'Gastos' : 'Cantidad Productos'}
                                     </Text>
                                 </TouchableOpacity>
                             ))}
@@ -125,12 +107,6 @@ export default function ReportesModal({ datos, periodo_id }) {
                             ? <GraficoTorta datos={datosFiltrados} />
                             : <GraficoTorta datos={datosProductos} />
                         }
-
-                        {filtro === 'productos' && (
-                            <ScrollView style={styles.listaScroll} showsVerticalScrollIndicator={false}>
-                                <ListaProductos datos={datosProductos} />
-                            </ScrollView>
-                        )}
 
                     </View>
                 </View>
@@ -217,11 +193,21 @@ const styles = StyleSheet.create({
     leyendaScroll: {
         maxHeight: 150,
         width: '100%',
+        backgroundColor: '#d7dbdf',
+        padding: 10,
+        borderRadius: 8
     },
     leyendaItem: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
+        paddingVertical: 1,
+        paddingHorizontal: 5,
+        borderRadius: 4,
+        marginBottom: 1,
+        borderBottomWidth: 1,
+        backgroundColor: '#ffffff',
+        borderBottomColor: '#e2e8f0',
     },
     leyendaColor: {
         width: 12,
