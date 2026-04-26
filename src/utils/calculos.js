@@ -1,3 +1,5 @@
+import { existePeriodo } from "../db/queries/periodos";
+
 // Formato pesos chilenos: 180000 → "$180.000"
 export function formatCLP(valor, conSimbolo = true) {
   const num = parseInt(valor) || 0;
@@ -37,10 +39,26 @@ export function formatMes(mes) {
   return `${nombres[parseInt(m) - 1]} ${anio}`;
 }
 
-// Mes actual en formato "YYYY-MM"
 export function mesActual() {
   const hoy = new Date();
   const anio = hoy.getFullYear();
   const mes = String(hoy.getMonth() + 1).padStart(2, '0');
   return `${anio}-${mes}`;
+}
+
+export function verificarPeriodoActual(hogarId) {
+  const actual = mesActual();
+  const existe = existePeriodo(hogarId, actual);
+
+  if (!existe) {
+    return {
+      estado: 'faltante',
+      actual
+    };
+  }
+
+  return {
+    estado: 'ok',
+    actual
+  };
 }

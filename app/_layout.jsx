@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Stack } from 'expo-router';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import { initDB } from '../src/db/database';
 import { seedCategorias } from '../src/utils/seedData';
+import { verificarPeriodoActual } from '../src/utils/calculos';
+import { formatMes } from '../src/utils/calculos';
 
 export default function RootLayout() {
   const [listo, setListo] = useState(false);
@@ -12,12 +14,26 @@ export default function RootLayout() {
       try {
         await initDB();
         seedCategorias();
+
+        // 👇 AQUÍ VA TU LÓGICA
+        const hogarId = 1; // ajusta esto según tu app
+        const estado = verificarPeriodoActual(hogarId);
+
+        if (estado.estado === 'ok') {
+          Alert.alert('Correcto', `Ya hay un periodo para el mes actual: ${formatMes(estado.actual)}`);
+        }
+
+        if (estado.estado === 'desactualizado') {
+          Alert.alert('Periodo desactualizado', `No existe un periodo para el mes actual: ${formatMes(estado.actual)}`);
+        }
+
       } catch (e) {
         console.error('Error inicializando DB:', e);
       } finally {
         setListo(true);
       }
     }
+
     setup();
   }, []);
 

@@ -81,3 +81,14 @@ export function obtenerUltimoPeriodo(hogar_id) {
     throw error;
   }
 }
+
+export function existePeriodo(hogar_id, mes) {
+  const db = getDB();
+
+  const result = db.getFirstSync(
+    'SELECT id FROM periodos WHERE hogar_id = ? AND mes = ?',
+    [hogar_id, mes]
+  );
+
+  return !!result;
+}
