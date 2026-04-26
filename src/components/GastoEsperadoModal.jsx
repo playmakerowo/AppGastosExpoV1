@@ -35,6 +35,11 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
     setModalVisible(false);
   }
 
+  function formatearMiles(valor) {
+    if (!valor) return '';
+    return valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
   function guardar() {
     try {
       actualizarMontoEsperadoCategoria(categoria_id, periodo_id, parseInt(gastoEsperado) || 0);
@@ -61,9 +66,14 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
 
             <TextInput
               style={styles.valorActual}
-              value={gastoEsperado}
+              value={formatearMiles(gastoEsperado)}
               keyboardType="numeric"
-              onChangeText={(v) => setGastoEsperado(v.replace(/[^0-9]/g, ''))}
+              onChangeText={(v) => {
+                const limpio = v.replace(/\./g, '');
+                if (!isNaN(limpio)) {
+                  setGastoEsperado(parseInt(limpio) || 0);
+                }
+              }}
               selectTextOnFocus
             />
 

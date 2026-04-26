@@ -58,12 +58,8 @@ export default function PeriodoScreen() {
   const [periodos, setPeriodos] = useState([]);
   const [hogarId, setHogarId] = useState(null);
 
-  const [modalCrearPeriodo, setModalCrearPeriodo] = useState({
-    visible: false,
-    nuevoMes: null,
-  });
-
-  const [copiarMesPasado, setCopiarMesPasado] = useState(true);
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [mesSeleccionado, setMesSeleccionado] = useState(null);
 
   useEffect(() => {
     const hogares = obtenerHogares();
@@ -97,10 +93,8 @@ export default function PeriodoScreen() {
       return;
     }
 
-    setModalCrearPeriodo({
-      visible: true,
-      nuevoMes,
-    });
+    setMesSeleccionado(nuevoMes);
+    setMostrarModal(true);
   }
 
   return (
@@ -129,72 +123,18 @@ export default function PeriodoScreen() {
         </Text>
       </TouchableOpacity>
 
-      <Modal
-        visible={modalCrearPeriodo.visible}
-        transparent
-        animationType="fade"
-      >
-        <View style={styles.overlay}>
-          <View style={styles.modal}>
+      <ModalCrearPeriodo
+        visible={mostrarModal}
+        hogarId={hogarId}
+        mes={mesSeleccionado}
+        onClose={(creado) => {
+          setMostrarModal(false);
 
-            <Text style={styles.titulo}>
-              Crear periodo
-            </Text>
-
-            <Text style={styles.texto}>
-              ¿Crear {formatMes(modalCrearPeriodo.nuevoMes || '')}?
-            </Text>
-
-            {/* SWITCH */}
-            <View style={styles.switchRow}>
-              <Text style={styles.switchText}>Copiar estimados e ingresos del periodo anterior</Text>
-              <View style={{ minWidth: 50 }}>
-                <Switch
-                  value={copiarMesPasado}
-                  onValueChange={setCopiarMesPasado}
-                />
-              </View>
-            </View>
-
-            {/* BOTONES */}
-            <View style={styles.actions}>
-              <Pressable
-                onPress={() =>
-                  setModalCrearPeriodo({ visible: false, nuevoMes: null })
-                }
-                style={styles.cancel}
-              >
-                <Text>Cancelar</Text>
-              </Pressable>
-
-              <Pressable
-                onPress={() => {
-                  const nuevoId = crearPeriodo(hogarId, modalCrearPeriodo.nuevoMes);
-
-                  if (copiarMesPasado) {
-                    copiarPeriodo(periodos[0].id, nuevoId);
-                  }
-
-                  setPeriodos(obtenerPeriodos(hogarId));
-
-                  setModalCrearPeriodo({
-                    visible: false,
-                    nuevoMes: null
-                  });
-
-                  Alert.alert(
-                    'OK',
-                    `Periodo ${formatMes(modalCrearPeriodo.nuevoMes)} creado`
-                  );
-                }}
-              >
-                <Text>Crear</Text>
-              </Pressable>
-            </View>
-
-          </View>
-        </View>
-      </Modal>
+          if (creado) {
+            setPeriodos(obtenerPeriodos(hogarId));
+          }
+        }}
+      />
 
     </SafeAreaView>
   );

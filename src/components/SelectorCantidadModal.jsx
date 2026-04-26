@@ -5,8 +5,9 @@ import { formatCLP } from '../utils/calculos';
 export default function SelectorCantidadModal({ value, onChange, esDinero, pasos }) {
 
   useEffect(() => {
-    setCantidad(value ?? 0);
-    setcantidadOriginal(value ?? 0);
+    const val = value ?? 0;
+    setCantidad(val);
+    setcantidadOriginal(val);
   }, [value]);
 
   const pasosDefault = [
@@ -47,6 +48,11 @@ export default function SelectorCantidadModal({ value, onChange, esDinero, pasos
     setModalVisible(false);
   }
 
+  function formatearMiles(valor) {
+    if (!valor) return '';
+    return valor.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
   return (
     <View style={{ alignSelf: 'stretch' }}>
       <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -67,9 +73,14 @@ export default function SelectorCantidadModal({ value, onChange, esDinero, pasos
 
             <TextInput
               style={styles.valorActual}
-              value={String(cantidad)}
+              value={formatearMiles(cantidad)}
               keyboardType="numeric"
-              onChangeText={(v) => setCantidad(parseInt(v) || 0)}
+              onChangeText={(v) => {
+                const limpio = v.replace(/\./g, '');
+                if (!isNaN(limpio)) {
+                  setCantidad(parseInt(limpio) || 0);
+                }
+              }}
               selectTextOnFocus
             />
 
