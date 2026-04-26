@@ -80,13 +80,13 @@ export function agregarProductoPeriodo(
 }
 
 export function eliminarProductoPeriodo(id, producto_id, periodo_id) {
-  console.log('[eliminarProductoPeriodo] Id:',id, 'producto_id:', producto_id, ' periodo:',periodo_id);
+  console.log('[eliminarProductoPeriodo] Id:', id, 'producto_id:', producto_id, ' periodo:', periodo_id);
   const db = getDB();
 
   try {
-    const result = db.runSync('DELETE FROM producto_periodo WHERE id = ? AND producto_id = ? AND periodo_id = ?', [id ,producto_id, periodo_id]);
+    const result = db.runSync('DELETE FROM producto_periodo WHERE id = ? AND producto_id = ? AND periodo_id = ?', [id, producto_id, periodo_id]);
     console.log('[eliminarProductoPeriodo] Datos modificados', result.changes);
-    
+
     return result.changes;
   } catch (error) {
     console.error('[eliminarProductoPeriodo] ERROR', error);
@@ -158,7 +158,7 @@ export function obtenerProductosMasComprados(periodo_id) {
   const db = getDB();
   try {
     const result = db.getAllSync(
-      `SELECT p.nombre, pp.cantidad AS valor
+      `SELECT p.nombre, pp.cantidad, pp.precio_unitario
        FROM producto_periodo pp
        JOIN productos p ON p.id = pp.producto_id
        JOIN productos prod ON prod.id = pp.producto_id
@@ -166,6 +166,9 @@ export function obtenerProductosMasComprados(periodo_id) {
        ORDER BY pp.cantidad DESC`,
       [periodo_id]
     );
+
+    console.log('[obtenerProductosMasComprados] RESULT:', result);
+
     return result;
   } catch (error) {
     console.error('[obtenerProductosMasComprados] ERROR', error);

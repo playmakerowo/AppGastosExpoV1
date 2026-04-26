@@ -5,6 +5,7 @@ import { formatCLP } from '../utils/calculos';
 import { obtenerProductosMasComprados } from '../db/queries/producto_periodo';
 
 function GraficoTorta({ datos }) {
+    console.log("[GraficoTorta] datos grafico: ", datos)
     const total = datos.reduce((acc, d) => acc + d.valor, 0);
     if (total === 0) return <Text style={styles.vacio}>Sin datos</Text>;
 
@@ -63,7 +64,41 @@ export default function ReportesModal({ datos, periodo_id }) {
     const [filtro, setFiltro] = useState('gastos');
 
     const datosFiltrados = datos?.filter(d => d.nombre !== 'Ingresos') ?? [];
-    const datosProductos = modalVisible ? obtenerProductosMasComprados(periodo_id) : [];
+
+    const productos = modalVisible ? obtenerProductosMasComprados(periodo_id) : [];
+
+    console.log('[ReportesModal] productos raw:', productos);
+
+    const datosProductosCantidad = productos.map(p => {
+        const mapped = {
+            nombre: p.nombre,
+            valor: p.cantidad
+        };
+
+        console.log('[Cantidad]', mapped);
+
+        return mapped;
+    });
+
+    const datosProductosValor = productos.map(p => {
+        const mapped = {
+            nombre: p.nombre,
+            cantidad: p.cantidad,
+            precio_unitario: p.precio_unitario,
+            valor: (Number(p.cantidad) || 0) * (Number(p.precio_unitario) || 0)
+        };
+
+        console.log('[Valor]', mapped);
+
+        return mapped;
+    });
+
+
+    const graficos = {
+        gastos: <GraficoTorta datos={datosFiltrados} />,
+        cantidad: <GraficoTorta datos={datosProductosCantidad} />,
+        valor: <GraficoTorta datos={datosProductosValor} />,
+    };
 
     return (
         <View>
@@ -90,23 +125,24 @@ export default function ReportesModal({ datos, periodo_id }) {
                         <Text style={styles.titulo}>Resumen del periodo</Text>
 
                         <View style={styles.filtros}>
-                            {['gastos', 'Cantidad productos'].map(f => (
+                            {['gastos', 'cantidad', 'valor'].map(f => (
                                 <TouchableOpacity
                                     key={f}
                                     style={[styles.filtroBtn, filtro === f && styles.filtroActivo]}
                                     onPress={() => setFiltro(f)}
                                 >
                                     <Text style={[styles.filtroTexto, filtro === f && styles.filtroTextoActivo]}>
-                                        {f === 'gastos' ? 'Gastos' : 'Cantidad Productos'}
+                                        {f === 'gastos'
+                                            ? 'Gastos'
+                                            : f === 'cantidad'
+                                                ? 'Cantidad Productos'
+                                                : 'Valor Total'}
                                     </Text>
                                 </TouchableOpacity>
                             ))}
                         </View>
 
-                        {filtro === 'gastos'
-                            ? <GraficoTorta datos={datosFiltrados} />
-                            : <GraficoTorta datos={datosProductos} />
-                        }
+                        {graficos[filtro]}
 
                     </View>
                 </View>
