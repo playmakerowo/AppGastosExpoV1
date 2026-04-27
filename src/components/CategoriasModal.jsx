@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, Alert, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
-import { obtenerCategorias, unirCategoriaPeriodo } from '../db/queries/categorias';
+import { obtenerCategoriasNoIncluidasPeriodo, unirCategoriaPeriodo } from '../db/queries/categorias';
 import NuevaCategoriaModal from './NuevaCategoriaModal';
 
 export default function Categorias({ periodo_id, onCategoriaAgregada }) {
@@ -9,10 +9,16 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
   const [busqueda, setBusqueda] = useState('');
 
   useEffect(() => {
-    const lista = obtenerCategorias();
-    setCategorias(lista);
-  }, []);
+    if (!modalVisible) return;
 
+    console.log('[Categorias] cargando categorias');
+
+    const lista = obtenerCategoriasNoIncluidasPeriodo(periodo_id);
+
+    console.log('[Categorias] lista:', lista);
+
+    setCategorias(lista);
+  }, [modalVisible, periodo_id]);
   return (
     <View>
       <TouchableOpacity
@@ -32,12 +38,14 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
 
             <Text style={styles.modalTitulo}>Categorías</Text>
 
-            <TextInput
-              style={styles.buscador}
-              placeholder="🔍 Buscar categoría..."
-              value={busqueda}
-              onChangeText={setBusqueda}
-            />
+            {categorias.length > 0 && (
+              <TextInput
+                style={styles.buscador}
+                placeholder="🔍 Buscar categoría..."
+                value={busqueda}
+                onChangeText={setBusqueda}
+              />
+            )}
 
             <FlatList
               data={categorias.filter(c => c.nombre.toLowerCase().includes(busqueda.toLowerCase()))}
@@ -60,13 +68,13 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
-                <Text style={styles.vacio}>Sin categorías</Text>
+                <Text style={styles.vacio}>Sin categorías para agregar</Text>
               }
             />
 
             <NuevaCategoriaModal
               onCategoriaCreada={() => {
-                const lista = obtenerCategorias();
+                const lista = obtenerCategoriasNoIncluidasPeriodo(periodo_id);
                 setCategorias(lista);
               }}
             />

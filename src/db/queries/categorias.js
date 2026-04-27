@@ -16,6 +16,31 @@ export function obtenerCategorias() {
   );
 }
 
+export function obtenerCategoriasNoIncluidasPeriodo(periodo_id) {
+  const db = getDB();
+
+  console.log('[categorias disponibles] periodo:', periodo_id);
+
+  const result = db.getAllSync(
+    `SELECT *
+    FROM categorias c
+    LEFT JOIN categoria_periodo cp 
+        ON cp.categoria_id = c.id
+    WHERE cp.activo = 0 
+      OR c.id NOT IN (
+            SELECT cp2.categoria_id
+            FROM categoria_periodo cp2
+            WHERE cp2.periodo_id = ?
+      )
+    ORDER BY c.nombre ASC;`,
+    [periodo_id]
+  );
+
+  console.log('[categorias disponibles RESULT]:', result);
+
+  return result;
+}
+
 export function actualizarMontoEsperadoCategoria(categoria_id, periodo_id, monto_esperado) {
   const db = getDB();
 
