@@ -37,6 +37,7 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
             <TextInput
               style={styles.buscador}
               placeholder="🔍 Buscar producto..."
+              placeholderTextColor="#000000"
               value={busqueda}
               onChangeText={setBusqueda}
             />

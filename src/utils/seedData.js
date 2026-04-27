@@ -20,22 +20,21 @@ const CATEGORIAS = [
 const PRODUCTOS_POR_CATEGORIA = {
   Ingresos:       [{ nombre: 'Sueldo', cantidad: 1, precio: 1048000 }],
   Fijos:          [{ nombre: 'Arriendo', cantidad: 1, precio: 310000 }],
-  Tarjeta:        [{ nombre: 'Tarjeta Crédito', cantidad: 1, precio: 274000 }],
-  Ahorro:         [{ nombre: 'Ahorro Ideal', cantidad: 1, precio: 100000 }],
-  Transporte:     [{ nombre: 'Transporte', cantidad: 1, precio: 38000 }],
+  Tarjeta:        [],
+  Ahorro:         [{ nombre: 'Ahorro', cantidad: 1, precio: 100000 }],
+  Transporte:     [],
   'Gastos Comunes': [{ nombre: 'Gastos Comunes', cantidad: 1, precio: 105000 }],
   Servicios: [
     { nombre: 'Luz',  cantidad: 1, precio: 40000 },
     { nombre: 'Agua', cantidad: 1, precio: 20000 },
   ],
-  Salud:   [{ nombre: 'Salud', cantidad: 1, precio: 47000 }],
-  Higiene: [{ nombre: 'Higiene', cantidad: 1, precio: 22500 }],
-  'Ocio/Gustos': [{ nombre: 'Ocio/Gustos', cantidad: 1, precio: 38000 }],
+  Salud:   [],
+  Higiene: [],
+  'Ocio/Gustos': [],
   Suscripciones: [
     { nombre: 'Youtube Premium', cantidad: 1, precio: 9000 },
     { nombre: 'Teléfono',        cantidad: 1, precio: 26000 },
     { nombre: 'Internet Hogar',  cantidad: 1, precio: 15000 },
-    { nombre: 'Xuper',           cantidad: 1, precio: 7000 },
     { nombre: 'Mercado Libre',   cantidad: 1, precio: 3000 },
   ],
   Limpieza: [
