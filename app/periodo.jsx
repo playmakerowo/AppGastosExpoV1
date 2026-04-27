@@ -22,6 +22,8 @@ import { getDB } from '../src/db/database';
 import { formatMes } from '../src/utils/calculos';
 import ModalCrearPeriodo from '../src/components/CrearPeriodosModal';
 
+import { ImageBackground } from 'react-native';
+
 function copiarPeriodo(periodoOrigenId, periodoDestinoId) {
   const productos = obtenerProductosPeriodo(periodoOrigenId);
 
@@ -100,45 +102,48 @@ export default function PeriodoScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
-
-      <FlatList
-        data={periodos}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity style={styles.item} onPress={() => {
-            router.push(`/?periodo_id=${item.id}`);
-          }}>
-            <Text style={styles.mesTexto}>{formatMes(item.mes)}</Text>
-            {item.mes === mesActual() && (
-              <Text style={styles.badge}>Actual</Text>
-            )}
-          </TouchableOpacity>
-        )}
-        contentContainerStyle={styles.lista}
-        ListEmptyComponent={
-          <Text style={styles.vacio}>No hay periodos aún</Text>
-        }
-      />
-
-      <TouchableOpacity style={styles.btnNuevo} onPress={crearNuevoPeriodo}>
-        <Text style={styles.btnNuevoText}>
-          + Crear {periodos.length > 0 ? formatMes(calcularSiguienteMes()) : 'periodo'}
-        </Text>
-      </TouchableOpacity>
-
-      <ModalCrearPeriodo
-        visible={mostrarModal}
-        hogarId={hogarId}
-        mes={mesSeleccionado}
-        onClose={(creado) => {
-          setMostrarModal(false);
-
-          if (creado) {
-            setPeriodos(obtenerPeriodos(hogarId));
+      <ImageBackground
+        source={require('../assets/wallpaper.gif')}
+        style={styles.safe}
+      >
+        <FlatList
+          data={periodos}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity style={styles.item} onPress={() => {
+              router.push(`/?periodo_id=${item.id}`);
+            }}>
+              <Text style={styles.mesTexto}>{formatMes(item.mes)}</Text>
+              {item.mes === mesActual() && (
+                <Text style={styles.badge}>Actual</Text>
+              )}
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.lista}
+          ListEmptyComponent={
+            <Text style={styles.vacio}>No hay periodos aún</Text>
           }
-        }}
-      />
+        />
 
+        <TouchableOpacity style={styles.btnNuevo} onPress={crearNuevoPeriodo}>
+          <Text style={styles.btnNuevoText}>
+            + Crear {periodos.length > 0 ? formatMes(calcularSiguienteMes()) : 'periodo'}
+          </Text>
+        </TouchableOpacity>
+
+        <ModalCrearPeriodo
+          visible={mostrarModal}
+          hogarId={hogarId}
+          mes={mesSeleccionado}
+          onClose={(creado) => {
+            setMostrarModal(false);
+
+            if (creado) {
+              setPeriodos(obtenerPeriodos(hogarId));
+            }
+          }}
+        />
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -149,7 +154,7 @@ const styles = StyleSheet.create({
   lista: { padding: 16 },
 
   item: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffce',
     borderRadius: 12,
     padding: 16,
     marginBottom: 8,
@@ -183,7 +188,7 @@ const styles = StyleSheet.create({
 
   btnNuevo: {
     margin: 16,
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -199,7 +204,7 @@ const styles = StyleSheet.create({
   },
 
   modal: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffce',
     borderRadius: 12,
     padding: 20,
   },

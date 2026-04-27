@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   button: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   vacio: {
     textAlign: 'center',
-    color: '#94a3b8',
+    color: '#ffffff',
     padding: 20,
   },
 });

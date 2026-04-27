@@ -63,7 +63,7 @@ export default function NuevoProductoModal({ categoria_id, onProductoCreado }) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffff',
     borderRadius: 16,
     padding: 24,
     width: '100%',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnCerrarText: {
-    color: '#94a3b8',
+    color: '#000000',
     fontSize: 15,
   },
 });

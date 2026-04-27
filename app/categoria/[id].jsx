@@ -9,6 +9,7 @@ import GastoEsperadoModal from '../../src/components/GastoEsperadoModal';
 import { obtenerGastoEsperado } from '../../src/db/queries/categorias';
 import Toast from 'react-native-toast-message';
 import ProductosModal from '../../src/components/ProdutosModal';
+import { ImageBackground } from 'react-native';
 
 export default function CategoriaScreen() {
   const { id, periodo_id, nombre } = useLocalSearchParams();
@@ -65,76 +66,81 @@ export default function CategoriaScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
-      <View style={[styles.resumenCard, sobre && !esIngreso && styles.resumenRojo]}>
-        {esIngreso ? (
-          <View style={styles.resumenFila}>
-            <Text style={styles.resumenLabel}>Ingresos</Text>
-            <Text style={styles.resumenValor}>{formatCLP(totalReal)}</Text>
-          </View>
-        ) : (
-          <>
+      <ImageBackground
+        source={require('../../assets/wallpaper.gif')}
+        style={styles.safe}
+      >
+        <View style={[styles.resumenCard, sobre && !esIngreso && styles.resumenRojo]}>
+          {esIngreso ? (
             <View style={styles.resumenFila}>
-              <Text style={styles.resumenLabel}>Gastado</Text>
-              <Text style={[styles.resumenValor, sobre && styles.rojo]}>
-                {formatCLP(totalReal)}
-              </Text>
+              <Text style={styles.resumenLabel}>Ingresos</Text>
+              <Text style={styles.resumenValor}>{formatCLP(totalReal)}</Text>
             </View>
-            <View style={styles.resumenFila}>
-              <Text style={styles.resumenLabel}>Presupuesto</Text>
-              <Text style={styles.resumenValor}>{formatCLP(montoEstimado)}</Text>
-            </View>
-            <View style={styles.resumenFila}>
-              <Text style={styles.resumenLabel}>Restante</Text>
-              <Text style={[styles.resumenValor, sobre && styles.rojo]}>
-                {formatCLP(montoEstimado - totalReal)}
-              </Text>
-            </View>
-            <View style={styles.resumenFila}>
-              <Text style={styles.resumenLabel}>Coste diario</Text>
-              <Text style={[styles.resumenValor, sobre && styles.rojo]}>
-                {formatCLP(totalReal / 30)}
-              </Text>
-            </View>
-          </>
-        )}
-      </View>
-      {!esIngreso && (
-        <GastoEsperadoModal
-          pasos={[
-            { valor: -10000, texto: '-10k' },
-            { valor: -1000, texto: '-1k' },
-            { valor: 1000, texto: '+1k' },
-            { valor: 10000, texto: '+10k' },
+          ) : (
+            <>
+              <View style={styles.resumenFila}>
+                <Text style={styles.resumenLabel}>Gastado</Text>
+                <Text style={[styles.resumenValor, sobre && styles.rojo]}>
+                  {formatCLP(totalReal)}
+                </Text>
+              </View>
+              <View style={styles.resumenFila}>
+                <Text style={styles.resumenLabel}>Presupuesto</Text>
+                <Text style={styles.resumenValor}>{formatCLP(montoEstimado)}</Text>
+              </View>
+              <View style={styles.resumenFila}>
+                <Text style={styles.resumenLabel}>Restante</Text>
+                <Text style={[styles.resumenValor, sobre && styles.rojo]}>
+                  {formatCLP(montoEstimado - totalReal)}
+                </Text>
+              </View>
+              <View style={styles.resumenFila}>
+                <Text style={styles.resumenLabel}>Coste diario</Text>
+                <Text style={[styles.resumenValor, sobre && styles.rojo]}>
+                  {formatCLP(totalReal / 30)}
+                </Text>
+              </View>
+            </>
+          )}
+        </View>
+        {!esIngreso && (
+          <GastoEsperadoModal
+            pasos={[
+              { valor: -10000, texto: '-10k' },
+              { valor: -1000, texto: '-1k' },
+              { valor: 1000, texto: '+1k' },
+              { valor: 10000, texto: '+10k' },
 
-            { valor: -1000000, texto: '-1M' },
-            { valor: -100000, texto: '-100k' },
-            { valor: 100000, texto: '+100k' },
-            { valor: 1000000, texto: '+1M' },
-          ]}
-          
-          categoria_id={id}
-          periodo_id={periodo_id}
-          onActualizado={() => {
-            const monto = obtenerGastoEsperado(id, periodo_id);
-            setMontoEstimado(monto);
-          }}
+              { valor: -1000000, texto: '-1M' },
+              { valor: -100000, texto: '-100k' },
+              { valor: 100000, texto: '+100k' },
+              { valor: 1000000, texto: '+1M' },
+            ]}
+
+            categoria_id={id}
+            periodo_id={periodo_id}
+            onActualizado={() => {
+              const monto = obtenerGastoEsperado(id, periodo_id);
+              setMontoEstimado(monto);
+            }}
+          />
+        )}
+
+        {/* Lista de productos */}
+        <FlatList
+          data={productos}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => (
+            <ProductoRow producto={item} periodo_id={periodo_id} onChange={handleCambio} onDelete={cargarProductos} />
+          )}
+          contentContainerStyle={styles.lista}
+          showsVerticalScrollIndicator={false}
         />
-      )}
 
-      {/* Lista de productos */}
-      <FlatList
-        data={productos}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => (
-          <ProductoRow producto={item} periodo_id={periodo_id} onChange={handleCambio} onDelete={cargarProductos} />
-        )}
-        contentContainerStyle={styles.lista}
-        showsVerticalScrollIndicator={false}
-      />
+        <ProductosModal categoria_id={id} periodo_id={periodo_id} onProductoAgregado={cargarProductos} />
 
-      <ProductosModal categoria_id={id} periodo_id={periodo_id} onProductoAgregado={cargarProductos} />
-
-      <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
+        <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -146,7 +152,7 @@ const styles = StyleSheet.create({
   },
   resumenCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffce',
     margin: 8,
     borderRadius: 14,
     paddingVertical: 16,
@@ -166,7 +172,7 @@ const styles = StyleSheet.create({
   },
   resumenLabel: {
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#030303',
     marginBottom: 4,
   },
   resumenValor: {
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   button: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',

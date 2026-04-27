@@ -177,7 +177,7 @@ export default function ReportesModal({ datos, periodo_id }) {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#6366f1',
+        backgroundColor: '#6365f1d3',
         padding: 12,
         borderRadius: 10,
         alignItems: 'center',
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f5f9',
     },
     filtroActivo: {
-        backgroundColor: '#6366f1',
+        backgroundColor: '#6365f1d3',
     },
     filtroTexto: {
         fontSize: 13,
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     },
     productoRank: {
         fontSize: 13,
-        color: '#94a3b8',
+        color: '#ffffff',
         width: 28,
     },
     productoNombre: {
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
         color: '#6366f1',
     },
     vacio: {
-        color: '#94a3b8',
+        color: '#ffffff',
         textAlign: 'center',
         marginTop: 40,
         fontSize: 15,

@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   btn: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     paddingVertical: 14,
     paddingHorizontal: 12,
     borderRadius: 10,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnCerrarText: {
-    color: '#94a3b8',
+    color: '#000000',
     fontSize: 15,
   },
 });

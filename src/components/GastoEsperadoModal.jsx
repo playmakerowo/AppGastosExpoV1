@@ -112,7 +112,7 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   btn: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     paddingVertical: 14,
     paddingHorizontal: 14,
     borderRadius: 10,
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnCerrarText: {
-    color: '#94a3b8',
+    color: '#000000',
     fontSize: 15,
   },
 });

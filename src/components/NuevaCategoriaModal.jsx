@@ -92,7 +92,7 @@ export default function NuevaCategoriaModal({ onCategoriaCreada }) {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     padding: 12,
     borderRadius: 10,
     alignItems: 'center',
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 13,
-    color: '#94a3b8',
+    color: '#0a0a0a',
     alignSelf: 'flex-start',
   },
   emojiGrid: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnCerrarText: {
-    color: '#94a3b8',
+    color: '#000000',
     fontSize: 15,
   },
 });

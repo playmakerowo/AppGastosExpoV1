@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import EditarPresupuestos from '../src/components/EditarPresupuestosModal';
 import { useLocalSearchParams } from 'expo-router';
 import ReportesModal from '../src/components/GraficoTorta';
+import { ImageBackground } from 'react-native';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -167,99 +168,105 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={irAnterior}
-          style={[styles.flecha, periodoIdx >= periodos.length - 1 && styles.flechaDisabled]}
-          disabled={periodoIdx >= periodos.length - 1}
-        >
-          <Text style={styles.flechaTexto}>‹</Text>
+
+      <ImageBackground
+        source={require('../assets/wallpaper.gif')}
+        style={styles.safe}
+      >
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={irAnterior}
+            style={[styles.flecha, periodoIdx >= periodos.length - 1 && styles.flechaDisabled]}
+            disabled={periodoIdx >= periodos.length - 1}
+          >
+            <Text style={styles.flechaTexto}>‹</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => router.push('/periodo')} style={styles.periodoCenter}>
+            <Text style={styles.periodoLabel}>Periodo</Text>
+            <Text style={styles.periodoNombre}>{formatMes(periodo?.mes)}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={irSiguiente}
+            style={[styles.flecha, periodoIdx <= 0 && styles.flechaDisabled]}
+            disabled={periodoIdx <= 0}
+          >
+            <Text style={styles.flechaTexto}>›</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.totalesCard} onPress={mostrarAlerta}>
+          <View style={styles.totalItem}>
+            <Text style={styles.totalLabel}>Estimado</Text>
+            <Text style={[styles.totalValor, estimadoExcede && styles.rojo]}>
+              {formatCLP(totalEstimado)}
+            </Text>
+          </View>
+          <View style={styles.divisor} />
+          <View style={styles.totalItem}>
+            <Text style={styles.totalLabel}>Ingresos</Text>
+            <Text style={styles.totalValor}>{formatCLP(totalIngresos)}</Text>
+          </View>
+          <View style={styles.divisor} />
+          <View style={styles.totalItem}>
+            <Text style={styles.totalLabel}>Gastado</Text>
+            <Text style={[styles.totalValor, gastadoExcede && styles.rojo]}>
+              {formatCLP(totalGastado)}
+            </Text>
+          </View>
+          <View style={styles.divisor} />
+          <View style={styles.totalItem}>
+            <Text style={styles.totalLabel}>Restante</Text>
+            <Text style={[styles.totalValor, restanteNegativo && styles.rojo]}>
+              {formatCLP(totalIngresos - totalGastado)}
+            </Text>
+          </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.push('/periodo')} style={styles.periodoCenter}>
-          <Text style={styles.periodoLabel}>Periodo</Text>
-          <Text style={styles.periodoNombre}>{formatMes(periodo?.mes)}</Text>
-        </TouchableOpacity>
+        <ReportesModal
+          periodo_id={periodo?.id}
+          datos={resumen.map(d => ({
+            nombre: d.categoria,
+            valor: d.monto_real,
+            esperado: d.monto_esperado,
+            categoria_id: d.categoria_id,
+          }))}
+        />
 
-        <TouchableOpacity
-          onPress={irSiguiente}
-          style={[styles.flecha, periodoIdx <= 0 && styles.flechaDisabled]}
-          disabled={periodoIdx <= 0}
-        >
-          <Text style={styles.flechaTexto}>›</Text>
-        </TouchableOpacity>
-      </View>
+        <ScrollView contentContainerStyle={styles.lista} showsVerticalScrollIndicator={false}>
+          {/* Ingresos fijo arriba */}
+          {resumen.filter(d => d.categoria_id === 1).map(item => (
+            <ResumenItem
+              key={String(item.categoria_id)}
+              categoria={item}
+              periodo_id={periodo?.id}
+              onEliminado={() => cargarResumen(periodo?.id)}
+              onPress={() => router.push(`/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`)}
+            />
+          ))}
 
-      <TouchableOpacity style={styles.totalesCard} onPress={mostrarAlerta}>
-        <View style={styles.totalItem}>
-          <Text style={styles.totalLabel}>Estimado</Text>
-          <Text style={[styles.totalValor, estimadoExcede && styles.rojo]}>
-            {formatCLP(totalEstimado)}
-          </Text>
-        </View>
-        <View style={styles.divisor} />
-        <View style={styles.totalItem}>
-          <Text style={styles.totalLabel}>Ingresos</Text>
-          <Text style={styles.totalValor}>{formatCLP(totalIngresos)}</Text>
-        </View>
-        <View style={styles.divisor} />
-        <View style={styles.totalItem}>
-          <Text style={styles.totalLabel}>Gastado</Text>
-          <Text style={[styles.totalValor, gastadoExcede && styles.rojo]}>
-            {formatCLP(totalGastado)}
-          </Text>
-        </View>
-        <View style={styles.divisor} />
-        <View style={styles.totalItem}>
-          <Text style={styles.totalLabel}>Restante</Text>
-          <Text style={[styles.totalValor, restanteNegativo && styles.rojo]}>
-            {formatCLP(totalIngresos - totalGastado)}
-          </Text>
-        </View>
-      </TouchableOpacity>
+          {/* Gastos con botones orden */}
+          {gastosOrdenados.map((item, index) => (
+            <ResumenItem
+              key={String(item.categoria_id)}
+              categoria={item}
+              periodo_id={periodo?.id}
+              onEliminado={() => cargarResumen(periodo?.id)}
+              onPress={() => router.push(`/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`)}
+              onSubir={index > 0 ? () => moverArriba(index) : null}
+              onBajar={index < gastosOrdenados.length - 1 ? () => moverAbajo(index) : null}
+            />
+          ))}
+        </ScrollView>
 
-      <ReportesModal
-        periodo_id={periodo?.id}
-        datos={resumen.map(d => ({
-          nombre: d.categoria,
-          valor: d.monto_real,
-          esperado: d.monto_esperado,
-          categoria_id: d.categoria_id,
-        }))}
-      />
-      
-      <ScrollView contentContainerStyle={styles.lista} showsVerticalScrollIndicator={false}>
-        {/* Ingresos fijo arriba */}
-        {resumen.filter(d => d.categoria_id === 1).map(item => (
-          <ResumenItem
-            key={String(item.categoria_id)}
-            categoria={item}
-            periodo_id={periodo?.id}
-            onEliminado={() => cargarResumen(periodo?.id)}
-            onPress={() => router.push(`/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`)}
-          />
-        ))}
+        <EditarPresupuestos
+          periodo_id={periodo?.id}
+          onActualizado={() => cargarResumen(periodo?.id)} />
 
-        {/* Gastos con botones orden */}
-        {gastosOrdenados.map((item, index) => (
-          <ResumenItem
-            key={String(item.categoria_id)}
-            categoria={item}
-            periodo_id={periodo?.id}
-            onEliminado={() => cargarResumen(periodo?.id)}
-            onPress={() => router.push(`/categoria/${item.categoria_id}?periodo_id=${periodo?.id}&nombre=${item.categoria}`)}
-            onSubir={index > 0 ? () => moverArriba(index) : null}
-            onBajar={index < gastosOrdenados.length - 1 ? () => moverAbajo(index) : null}
-          />
-        ))}
-      </ScrollView>
-
-      <EditarPresupuestos
-        periodo_id={periodo?.id}
-        onActualizado={() => cargarResumen(periodo?.id)} />
-
-      <CategoriasModal periodo_id={periodo?.id} onCategoriaAgregada={cargarResumen} />
-      <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
+        <CategoriasModal periodo_id={periodo?.id} onCategoriaAgregada={cargarResumen} />
+        <Toast position='top' topOffset={10} onPress={() => Toast.hide()} />
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -269,7 +276,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#6366f1',
+    backgroundColor: '#6365f1d3',
     paddingVertical: 14,
     paddingHorizontal: 8,
   },
@@ -281,7 +288,7 @@ const styles = StyleSheet.create({
   periodoNombre: { fontSize: 18, fontWeight: '700', color: '#fff' },
   totalesCard: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffce',
     margin: 8,
     borderRadius: 14,
     paddingVertical: 16,
@@ -293,7 +300,7 @@ const styles = StyleSheet.create({
     borderLeftColor: '#22c55e',
   },
   totalItem: { flex: 1, alignItems: 'center' },
-  totalLabel: { fontSize: 11, color: '#94a3b8', marginBottom: 4 },
+  totalLabel: { fontSize: 11, color: '#000000', marginBottom: 4 },
   totalValor: { fontSize: 14, fontWeight: '700', color: '#0f172a' },
   rojo: { color: '#ef4444' },
   divisor: { width: 1, backgroundColor: '#f1f5f9', marginVertical: 4 },

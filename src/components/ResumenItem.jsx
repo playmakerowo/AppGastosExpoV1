@@ -88,7 +88,7 @@ export default function ResumenItem({ categoria, onPress, periodo_id, onEliminad
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffce',
     borderRadius: 12,
     padding: 14,
     marginBottom: 8,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   separador: {
     fontSize: 12,
-    color: '#94a3b8',
+    color: '#030303',
   },
   esperado: {
     fontSize: 13,
