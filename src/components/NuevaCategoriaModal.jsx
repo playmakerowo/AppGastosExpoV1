@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { crearCategoria } from '../db/queries/categorias';
 
 const EMOJIS = [
-  '🛒','🍔','🚗','🏠','💊','📚','👗','🎮','✈️','🐾',
-  '💡','📱','🎵','🏋️','🍷','☕','🧹','💈','🎁','💰',
-  '🏦','📊','🧾','🔧','🌿','🎓','👶','🐶','🐱','🏖️',
+  '🛒', '🍔', '🚗', '🏠', '💊', '📚', '👗', '🎮', '✈️', '🐾',
+  '💡', '📱', '🎵', '🏋️', '🍷', '☕', '🧹', '💈', '🎁', '💰',
+  '🏦', '📊', '🧾', '🔧', '🌿', '🎓', '👶', '🐶', '🐱', '🏖️',
 ];
 
 export default function NuevaCategoriaModal({ onCategoriaCreada }) {
@@ -54,6 +54,7 @@ export default function NuevaCategoriaModal({ onCategoriaCreada }) {
             <TextInput
               style={styles.input}
               placeholder="Nombre de la categoría"
+              placeholderTextColor="#747070"
               value={nombre}
               onChangeText={setNombre}
               autoFocus
@@ -110,7 +111,8 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1b1b1b',
+    color: '#ffffff',
     borderRadius: 16,
     padding: 24,
     width: '100%',
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1e293b',
+    color: '#ffffff',
   },
   iconoPreview: {
     width: 64,
@@ -141,11 +143,11 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     width: '100%',
-    color: '#0f172a',
+    color: '#ffffff',
   },
   label: {
     fontSize: 13,
-    color: '#0a0a0a',
+    color: '#ffffff',
     alignSelf: 'flex-start',
   },
   emojiGrid: {
@@ -181,12 +183,15 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   btnCerrar: {
+    backgroundColor: '#373a38',
+    padding: 14,
+    borderRadius: 10,
     padding: 14,
     width: '100%',
     alignItems: 'center',
   },
   btnCerrarText: {
-    color: '#000000',
+    color: '#ffffff',
     fontSize: 15,
   },
 });

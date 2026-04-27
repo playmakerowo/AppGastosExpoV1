@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
         margin: 5,
     },
     buttonText: {
-        color: '#fff',
+        color: '#f8f8f8',
         fontWeight: '600',
     },
     overlay: {
@@ -193,7 +193,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#1b1b1b',
+        color: '#ffffff',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: 24,
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
     titulo: {
         fontSize: 20,
         fontWeight: '700',
-        color: '#1e293b',
+        color: '#ffffff',
         marginBottom: 16,
         textAlign: 'center',
     },
@@ -231,14 +232,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f5f9',
     },
     filtroActivo: {
-        backgroundColor: '#6365f1d3',
+        backgroundColor: '#494bbd',
     },
     filtroTexto: {
         fontSize: 13,
-        color: '#64748b',
+        color: '#030303',
     },
     filtroTextoActivo: {
-        color: '#fff',
+        color: '#ffffff',
         fontWeight: '600',
     },
     graficoContainer: {
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     leyendaScroll: {
         maxHeight: 200,
         width: '100%',
-        backgroundColor: '#99a3ad',
+        backgroundColor: '#373838',
         borderRadius: 8,
     },
     leyendaItem: {
@@ -265,7 +266,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginBottom: 1,
         borderBottomWidth: 1,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#494848',
         borderBottomColor: '#e2e8f0',
     },
     leyendaColor: {
@@ -276,12 +277,12 @@ const styles = StyleSheet.create({
     leyendaNombre: {
         flex: 1,
         fontSize: 14,
-        color: '#1e293b',
+        color: '#ffffff',
     },
     leyendaValor: {
         fontSize: 14,
         fontWeight: '600',
-        color: '#0f172a',
+        color: '#ffffff',
     },
     listaScroll: {
         maxHeight: 200,

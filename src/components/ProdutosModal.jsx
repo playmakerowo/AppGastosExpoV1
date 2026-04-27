@@ -62,7 +62,7 @@ export default function ProductosModal({ categoria_id, periodo_id, onProductoAgr
                     }
                   }}
                 >
-                  <Text>{item.nombre}</Text>
+                  <Text style={styles.buttonText}>{item.nombre}</Text>
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#2b2929',
     borderRadius: 12,
     padding: 16,
     maxHeight: '80%',
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#fff'
   },
   buscador: {
     borderWidth: 1,
@@ -124,9 +125,13 @@ const styles = StyleSheet.create({
     color: '#0f172a',
   },
   item: {
-    padding: 12,
+    padding: 9,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    color: '#fff',
+    backgroundColor: '#504c4cb7',
+    borderRadius: 10,
+    marginTop: 2
   },
   button: {
     backgroundColor: '#6365f1d3',

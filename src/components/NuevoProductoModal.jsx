@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   container: {
-    backgroundColor: '#ffff',
+    backgroundColor: '#0e0e0e',
     borderRadius: 16,
     padding: 24,
     width: '100%',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1e293b',
+    color: '#ffffff',
   },
   input: {
     borderWidth: 1,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     width: '100%',
-    color: '#0f172a',
+    color: '#ffffff',
   },
   btnConfirmar: {
     backgroundColor: '#22c55e',
@@ -116,11 +116,13 @@ const styles = StyleSheet.create({
   },
   btnCerrar: {
     padding: 14,
+    borderRadius: 10,
     width: '100%',
     alignItems: 'center',
+    backgroundColor: '#222122',
   },
   btnCerrarText: {
-    color: '#000000',
+    color: '#ffffff',
     fontSize: 15,
   },
 });

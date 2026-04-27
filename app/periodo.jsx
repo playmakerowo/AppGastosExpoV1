@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
   lista: { padding: 16 },
 
   item: {
-    backgroundColor: '#ffffffce',
+    backgroundColor: '#302e2ed2',
+    color: '#ffffff',
     borderRadius: 12,
     padding: 16,
     marginBottom: 8,
@@ -174,10 +175,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     maxWidth: 180
   },
-  mesTexto: { fontSize: 16, fontWeight: '500' },
+  mesTexto: { fontSize: 16, fontWeight: '500', color: '#ffffff', },
 
   badge: {
-    backgroundColor: '#e0e7ff',
+    backgroundColor: '#c2bebe',
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 20,

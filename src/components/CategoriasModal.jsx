@@ -64,7 +64,7 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
                     }
                   }}
                 >
-                  <Text>{item.icono} {item.nombre}</Text>
+                  <Text style={styles.itemText}>{item.icono} {item.nombre}</Text>
                 </TouchableOpacity>
               )}
               ListEmptyComponent={
@@ -104,7 +104,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#111010',
+    color: '#ffffff',
     borderRadius: 12,
     padding: 16,
     maxHeight: '80%',
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#fff'
   },
   buscador: {
     borderWidth: 1,
@@ -128,6 +130,11 @@ const styles = StyleSheet.create({
     padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    backgroundColor: '#1f1e1e',
+    borderRadius: 3
+  },
+  itemText: {
+    color: '#fff'
   },
   button: {
     backgroundColor: '#6365f1d3',

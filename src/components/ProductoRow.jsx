@@ -89,7 +89,7 @@ export default function ProductoRow({ producto, periodo_id, onChange, onDelete }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffffce',
+    backgroundColor: '#2c2c2cd2',
     borderRadius: 10,
     padding: 12,
     marginBottom: 6,
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   nombre: {
     fontSize: 14,
     fontWeight: '500',
-    color: '#1e293b',
+    color: '#ffffff',
     marginBottom: 8,
   },
   inputs: {
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    color: '#030303',
+    color: '#ffffff',
     marginBottom: 2,
   },
   input: {
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   mult: {
     fontSize: 16,
-    color: '#030303',
+    color: '#fafafa',
     marginTop: 12,
   },
   total: {
@@ -150,12 +150,12 @@ const styles = StyleSheet.create({
   totalValor: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#0f172a',
+    color: '#ffffff',
   },
   btnEliminar: {
     paddingLeft: 4,
     paddingRight: 4,
-    backgroundColor: '#e6e3e3',
+    backgroundColor: '#000000',
     borderRadius: 4,
     marginLeft: 5,
     alignItems: 'center',

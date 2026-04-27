@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     textAlign: 'center',
-    backgroundColor: '#f8fafc',
-    color: '#0f172a',
+    backgroundColor: '#302e2ed2',
+    color: '#ffffff',
   },
   overlay: {
     flex: 1,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#252525',
     borderRadius: 16,
     padding: 24,
     width: '100%',
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1e293b',
+    color: '#ffffff',
   },
   valorActual: {
     fontSize: 48,
@@ -183,12 +183,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   btnCerrar: {
+    backgroundColor: '#3c3d3cf1',
     padding: 14,
+    borderRadius: 10,
     width: '100%',
     alignItems: 'center',
   },
   btnCerrarText: {
-    color: '#000000',
+    color: '#ffffff',
     fontSize: 15,
   },
 });

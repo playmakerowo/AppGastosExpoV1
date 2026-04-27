@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
   resumenCard: {
     flexDirection: 'row',
-    backgroundColor: '#ffffffce',
+    backgroundColor: '#222121b7',
     margin: 8,
     borderRadius: 14,
     paddingVertical: 16,
@@ -172,13 +172,13 @@ const styles = StyleSheet.create({
   },
   resumenLabel: {
     fontSize: 11,
-    color: '#030303',
+    color: '#ffffff',
     marginBottom: 4,
   },
   resumenValor: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0f172a',
+    color: '#ffffff',
   },
   rojo: {
     color: '#ef4444',
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   btnText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
     fontWeight: '700',
   },

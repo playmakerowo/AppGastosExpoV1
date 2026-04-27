@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   montoReal: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#0f172a',
+    color: '#f1f1f1',
     paddingVertical: 10,
     textAlign: 'center',
   },
@@ -132,7 +132,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   modalContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1b1b1b',
+    color: '#ffffff',
     borderRadius: 12,
     padding: 16,
     maxHeight: '80%',
@@ -141,6 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#ffffff',
   },
   item: {
     padding: 12,
@@ -157,7 +159,7 @@ const styles = StyleSheet.create({
   },
 
   buttonSecondary: {
-    backgroundColor: '#94a3b8',
+    backgroundColor: '#454647',
   },
 
   buttonText: {
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
   categoriaNombre: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1e293b',
+    color: '#ffffff',
     marginBottom: 8,
   },
   filaCampos: {

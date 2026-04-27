@@ -90,16 +90,18 @@ export default function ModalCrearPeriodo({
             <Switch
               value={copiarMesPasado}
               onValueChange={setCopiarMesPasado}
+              trackColor={{ false: '#FFFFFF', true: '#5e4caf' }} // OFF blanco, ON verde
+              thumbColor={copiarMesPasado ? '#FFFFFF' : '#f4f3f4'} // opcional
             />
           </View>
 
           <View style={styles.actions}>
             <Pressable onPress={() => onClose(false)} style={styles.cancel}>
-              <Text>Cancelar</Text>
+              <Text style={styles.texto}>Cancelar</Text>
             </Pressable>
 
             <Pressable onPress={handleCrear}>
-              <Text>Crear</Text>
+              <Text style={styles.texto}>Crear</Text>
             </Pressable>
           </View>
 
@@ -110,43 +112,47 @@ export default function ModalCrearPeriodo({
 }
 
 const styles = StyleSheet.create({
-    overlay: {
-        flex: 1,
-        backgroundColor: '#00000080',
-        justifyContent: 'center',
-        padding: 20,
-    },
-    modal: {
-        backgroundColor: '#ffffffce',
-        borderRadius: 12,
-        padding: 20,
-    },
-    titulo: {
-        fontSize: 18,
-        fontWeight: '700',
-        marginBottom: 10,
-    },
-    texto: {
-        marginBottom: 15,
-    },
-    switchRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginVertical: 10,
-        gap: 12,
-    },
-    switchText: {
-        fontSize: 14,
-        flex: 1,
-        flexWrap: 'wrap',
-    },
-    actions: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        marginTop: 20,
-    },
-    cancel: {
-        marginRight: 20,
-    }
+  overlay: {
+    flex: 1,
+    backgroundColor: '#00000080',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modal: {
+    backgroundColor: '#1b1b1b',
+    color: '#ffffff',
+    borderRadius: 12,
+    padding: 20,
+  },
+  titulo: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 10,
+    color: '#ffffff',
+  },
+  texto: {
+    marginBottom: 15,
+    color: '#ffffff',
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+    gap: 12,
+  },
+  switchText: {
+    fontSize: 14,
+    flex: 1,
+    flexWrap: 'wrap',
+    color: '#ffffff',
+  },
+  actions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 20,
+  },
+  cancel: {
+    marginRight: 20,
+  }
 });

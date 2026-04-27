@@ -88,7 +88,7 @@ export default function ResumenItem({ categoria, onPress, periodo_id, onEliminad
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ffffffce',
+    backgroundColor: '#252525ce',
     borderRadius: 12,
     padding: 14,
     marginBottom: 8,
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginRight: 10,
     flex: 1,
+    color: '#fff'
   },
   montos: {
     flexDirection: 'row',
@@ -115,23 +116,23 @@ const styles = StyleSheet.create({
   real: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1e293b',
+    color: '#fcfdff',
   },
   rojo: {
     color: '#ef4444',
   },
   separador: {
     fontSize: 12,
-    color: '#030303',
+    color: '#ffffff',
   },
   esperado: {
     fontSize: 13,
-    color: '#64748b',
+    color: '#817a7a',
   },
   btnEliminar: {
     paddingLeft: 4,
     paddingRight: 4,
-    backgroundColor: '#e6e3e3',
+    backgroundColor: '#080808f3',
     borderRadius: 4,
     marginLeft: 5,
     alignItems: 'center',
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   btnOrden: {
-    backgroundColor: '#e0e7ff',
+    backgroundColor: '#000000ef',
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 4,

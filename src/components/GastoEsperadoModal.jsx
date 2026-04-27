@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   container: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1b1b1b',
+    color: '#ffffff',
     borderRadius: 16,
     padding: 24,
     width: '100%',
@@ -140,7 +141,7 @@ const styles = StyleSheet.create({
   titulo: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1e293b',
+    color: '#ffffff',
   },
   valorActual: {
     fontSize: 48,
@@ -179,12 +180,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   btnCerrar: {
+    backgroundColor: '#3c3d3cf1',
     padding: 14,
+    borderRadius: 10,
     width: '100%',
     alignItems: 'center',
   },
   btnCerrarText: {
-    color: '#000000',
+    color: '#ffffff',
     fontSize: 15,
   },
 });
