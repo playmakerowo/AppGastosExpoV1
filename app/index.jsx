@@ -74,6 +74,7 @@ export default function HomeScreen() {
           setPeriodoIdx(idx);
           periodoIdxRef.current = idx;
           cargarResumen(lista[idx].id);
+          inicializado.current = true;
           return;
         }
       }

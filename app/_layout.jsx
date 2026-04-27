@@ -7,6 +7,7 @@ import { verificarPeriodoActual } from '../src/utils/calculos';
 import { formatMes } from '../src/utils/calculos';
 import ModalCrearPeriodo from '../src/components/CrearPeriodosModal';
 import { useRouter } from 'expo-router';
+import * as Notifications from 'expo-notifications';
 
 export default function RootLayout() {
   const [listo, setListo] = useState(false);
@@ -14,11 +15,61 @@ export default function RootLayout() {
   const [mesDetectado, setMesDetectado] = useState(null);
   const router = useRouter();
 
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowBanner: true,
+      shouldShowList: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+
+  async function programarRecordatorio() {
+    try {
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== 'granted') return;
+
+      // Verificar si ya hay notificaciones programadas
+      const programadas = await Notifications.getAllScheduledNotificationsAsync();
+      if (programadas.length > 0) return; // 👈 ya existe, no hacer nada
+
+      // Notificación inmediata al instalar
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: '💰 Control de Gastos',
+          body: '¡Bienvenido! Comienza a registrar tus gastos.',
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 5,
+          repeats: false,
+        },
+      });
+
+      // Notificación semanal
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: '💰 Control de Gastos',
+          body: '¿Tienes compras pendientes por registrar?',
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 60 * 60 * 24 * 7,
+          repeats: true,
+        },
+      });
+
+    } catch (e) {
+      console.log('Notificaciones no disponibles en este entorno');
+    }
+  }
+
   useEffect(() => {
     async function setup() {
       try {
         await initDB();
         seedCategorias();
+        await programarRecordatorio();
         const hogarId = 1;
         setTimeout(() => {
           const estado = verificarPeriodoActual(hogarId);
