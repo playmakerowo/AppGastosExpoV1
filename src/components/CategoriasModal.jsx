@@ -42,6 +42,7 @@ export default function Categorias({ periodo_id, onCategoriaAgregada }) {
               <TextInput
                 style={styles.buscador}
                 placeholder="🔍 Buscar categoría..."
+                placeholderTextColor="#000000"
                 value={busqueda}
                 onChangeText={setBusqueda}
               />
