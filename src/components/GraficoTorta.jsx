@@ -5,12 +5,17 @@ import { formatCLP } from '../utils/calculos';
 import { obtenerProductosMasComprados } from '../db/queries/producto_periodo';
 
 function GraficoTorta({ datos }) {
-    console.log("[GraficoTorta] datos grafico: ", datos)
-    const total = datos.reduce((acc, d) => acc + d.valor, 0);
+
+    let total = 0;
+    datos.forEach(d => {
+        total += d.valor;
+    });
+    console.log("[GraficoTorta] datos grafico: ", datos, "total: ", total)
+
     if (total === 0) return <Text style={styles.vacio}>Sin datos</Text>;
 
     const colores = ['#6366f1', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#ec4899', '#14b8a6', '#f97316'];
-    const MAX_SEGMENTOS = 25;
+    const MAX_SEGMENTOS = 100;
 
     let datosAgrupados = [...datos].sort((a, b) => b.valor - a.valor);
     if (datosAgrupados.length > MAX_SEGMENTOS) {
@@ -46,6 +51,12 @@ function GraficoTorta({ datos }) {
             </Svg>
             <ScrollView style={styles.leyendaScroll} showsVerticalScrollIndicator={false}>
                 <View style={styles.leyenda}>
+                    <View style={styles.leyendaItem}>
+                        <View style={[styles.leyendaColor, { backgroundColor: 'red' }]} />
+                        <Text style={styles.leyendaNombre} numberOfLines={1}>{'Total'}</Text>
+                        <Text style={styles.leyendaValor}>{formatCLP(total, false)}</Text>
+                    </View>
+
                     {segmentos.map((s, i) => (
                         <View key={i} style={styles.leyendaItem}>
                             <View style={[styles.leyendaColor, { backgroundColor: s.color }]} />
@@ -65,34 +76,42 @@ export default function ReportesModal({ datos, periodo_id }) {
 
     const datosFiltrados = datos?.filter(d => d.nombre !== 'Ingresos') ?? [];
 
-    const productos = modalVisible ? obtenerProductosMasComprados(periodo_id) : [];
+    const productos = obtenerProductosMasComprados(periodo_id) ?? [];
 
     console.log('[ReportesModal] productos raw:', productos);
 
-    const datosProductosCantidad = productos.map(p => {
-        const mapped = {
-            nombre: p.nombre,
-            valor: p.cantidad
-        };
+    // 🔥 Agrupación correcta por producto
+    const productosAgrupados = Object.values(
+        productos.reduce((acc, p) => {
+            if (!acc[p.nombre]) {
+                acc[p.nombre] = {
+                    nombre: p.nombre,
+                    cantidad: 0,
+                    valor: 0
+                };
+            }
 
-        console.log('[Cantidad]', mapped);
+            const cantidad = Number(p.cantidad) || 0;
+            const precio = Number(p.precio_unitario) || 0;
 
-        return mapped;
-    });
+            acc[p.nombre].cantidad += cantidad;
+            acc[p.nombre].valor += cantidad * precio;
 
-    const datosProductosValor = productos.map(p => {
-        const mapped = {
-            nombre: p.nombre,
-            cantidad: p.cantidad,
-            precio_unitario: p.precio_unitario,
-            valor: (Number(p.cantidad) || 0) * (Number(p.precio_unitario) || 0)
-        };
+            return acc;
+        }, {})
+    );
 
-        console.log('[Valor]', mapped);
+    // 📦 Cantidad total por producto
+    const datosProductosCantidad = productosAgrupados.map(p => ({
+        nombre: p.nombre,
+        valor: p.cantidad
+    }));
 
-        return mapped;
-    });
-
+    // 💰 Valor total por producto
+    const datosProductosValor = productosAgrupados.map(p => ({
+        nombre: p.nombre,
+        valor: p.valor
+    }));
 
     const graficos = {
         gastos: <GraficoTorta datos={datosFiltrados} />,
@@ -102,7 +121,10 @@ export default function ReportesModal({ datos, periodo_id }) {
 
     return (
         <View>
-            <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity
+                style={styles.button}
+                onPress={() => setModalVisible(true)}
+            >
                 <Text style={styles.buttonText}>📊 Resumen de gastos</Text>
             </TouchableOpacity>
 
@@ -124,6 +146,7 @@ export default function ReportesModal({ datos, periodo_id }) {
 
                         <Text style={styles.titulo}>Resumen del periodo</Text>
 
+                        {/* FILTROS */}
                         <View style={styles.filtros}>
                             {['gastos', 'cantidad', 'valor'].map(f => (
                                 <TouchableOpacity
@@ -135,13 +158,14 @@ export default function ReportesModal({ datos, periodo_id }) {
                                         {f === 'gastos'
                                             ? 'Gastos'
                                             : f === 'cantidad'
-                                                ? 'Cantidad Productos'
-                                                : 'Valor Total'}
+                                                ? 'Cant Produc'
+                                                : 'Gasto x producto'}
                                     </Text>
                                 </TouchableOpacity>
                             ))}
                         </View>
 
+                        {/* GRAFICOS */}
                         {graficos[filtro]}
 
                     </View>
@@ -224,14 +248,13 @@ const styles = StyleSheet.create({
     },
     leyenda: {
         width: '100%',
-        gap: 8,
+        padding: 10
     },
     leyendaScroll: {
-        maxHeight: 150,
+        maxHeight: 200,
         width: '100%',
-        backgroundColor: '#d7dbdf',
-        padding: 10,
-        borderRadius: 8
+        backgroundColor: '#99a3ad',
+        borderRadius: 8,
     },
     leyendaItem: {
         flexDirection: 'row',

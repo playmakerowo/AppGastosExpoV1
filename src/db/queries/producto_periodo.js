@@ -161,14 +161,16 @@ export function obtenerProductosMasComprados(periodo_id) {
       `SELECT p.nombre, pp.cantidad, pp.precio_unitario
        FROM producto_periodo pp
        JOIN productos p ON p.id = pp.producto_id
-       JOIN productos prod ON prod.id = pp.producto_id
-       WHERE pp.periodo_id = ? AND prod.categoria_id != 1
+       JOIN categoria_periodo cp 
+         ON cp.categoria_id = p.categoria_id 
+        AND cp.periodo_id = pp.periodo_id
+       WHERE pp.periodo_id = ?
+         AND cp.activo = 1 AND p.categoria_id != 1
        ORDER BY pp.cantidad DESC`,
       [periodo_id]
     );
 
     console.log('[obtenerProductosMasComprados] RESULT:', result);
-
     return result;
   } catch (error) {
     console.error('[obtenerProductosMasComprados] ERROR', error);
