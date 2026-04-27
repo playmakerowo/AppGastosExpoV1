@@ -19,25 +19,19 @@ export function obtenerCategorias() {
 export function obtenerCategoriasNoIncluidasPeriodo(periodo_id) {
   const db = getDB();
 
-  console.log('[categorias disponibles] periodo:', periodo_id);
-
   const result = db.getAllSync(
-    `SELECT *
-    FROM categorias c
-    LEFT JOIN categoria_periodo cp 
-        ON cp.categoria_id = c.id
-    WHERE cp.activo = 0 
-      OR c.id NOT IN (
-            SELECT cp2.categoria_id
-            FROM categoria_periodo cp2
-            WHERE cp2.periodo_id = ?
-      )
-    ORDER BY c.nombre ASC;`,
+    `SELECT c.id, c.nombre, c.icono
+     FROM categorias c
+     WHERE c.id NOT IN (
+       SELECT cp.categoria_id
+       FROM categoria_periodo cp
+       WHERE cp.periodo_id = ? AND cp.activo = 1
+     )
+     ORDER BY c.nombre ASC`,
     [periodo_id]
   );
 
   console.log('[categorias disponibles RESULT]:', result);
-
   return result;
 }
 

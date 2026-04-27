@@ -98,93 +98,32 @@ const PRESUPUESTOS = {
   Servicios:       60000,
 };
 
+const CATEGORIAS_INICIALES = ['Ingresos', 'Fijos', 'Ahorro', 'Suscripciones'];
+
 export function seedData(periodoId) {
   const db = getDB();
 
-  console.log('[seedData] INICIO', { periodoId });
-
-  // Verificar si ya fue seeded
   const yaExiste = db.getFirstSync(
     'SELECT id FROM categoria_periodo WHERE periodo_id = ?',
     [periodoId]
   );
 
-  console.log('[seedData] yaExiste check', yaExiste);
+  if (yaExiste) return;
 
-  if (yaExiste) {
-    console.log('[seedData] SKIP - ya existe data para periodo');
-    return;
-  }
-
-  // Obtener categorías existentes
   const categorias = db.getAllSync('SELECT * FROM categorias');
-  console.log('[seedData] categorias base count', categorias.length);
-
   const catMap = {};
-  categorias.forEach(c => {
-    catMap[c.nombre] = c.id;
-  });
+  categorias.forEach(c => { catMap[c.nombre] = c.id; });
 
-  console.log('[seedData] catMap', catMap);
+  CATEGORIAS_INICIALES.forEach(catNombre => {
+    const catId = catMap[catNombre];
+    if (!catId) return;
 
-  CATEGORIAS.forEach(cat => {
-    const catId = catMap[cat.nombre];
+    const presupuesto = PRESUPUESTOS[catNombre] || 0;
 
-    console.log('[seedData] procesando categoria', {
-      nombre: cat.nombre,
-      catId
-    });
-
-    if (!catId) {
-      console.log('[seedData] categoria no encontrada en DB', cat.nombre);
-      return;
-    }
-
-    const presupuesto = PRESUPUESTOS[cat.nombre] || 0;
-
-    console.log('[seedData] insert categoria_periodo', {
-      categoria_id: catId,
-      periodoId,
-      presupuesto
-    });
-
-    const result = db.runSync(
+    db.runSync(
       'INSERT OR IGNORE INTO categoria_periodo (categoria_id, periodo_id, monto_esperado) VALUES (?, ?, ?)',
       [catId, periodoId, presupuesto]
     );
-
-    console.log('[seedData] categoria_periodo result', result);
-
-    // Productos
-    const productos = PRODUCTOS_POR_CATEGORIA[cat.nombre] || [];
-
-    console.log('[seedData] productos encontrados', {
-      categoria: cat.nombre,
-      count: productos.length
-    });
-
-    productos.forEach(prod => {
-      const producto = db.getFirstSync(
-        'SELECT id FROM productos WHERE nombre = ? AND categoria_id = ?',
-        [prod.nombre, catId]
-      );
-
-      console.log('[seedData] producto lookup', {
-        nombre: prod.nombre,
-        found: !!producto
-      });
-
-      if (producto) {
-        const insert = db.runSync(
-          `INSERT OR IGNORE INTO producto_periodo
-           (producto_id, periodo_id, cantidad, precio_unitario, monto_esperado)
-           VALUES (?, ?, ?, ?, ?)`,
-          [producto.id, periodoId, prod.cantidad, prod.precio, prod.cantidad * prod.precio]
-        );
-
-        console.log('[seedData] producto_periodo insert', insert);
-      }
-    });
   });
 
   console.log('[seedData] COMPLETADO periodo', periodoId);
