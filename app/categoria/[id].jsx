@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useNavigation } from 'expo-router';
 import { obtenerProductosPorCategoria, actualizarProductoPeriodo } from '../../src/db/queries/producto_periodo';
@@ -18,6 +18,7 @@ export default function CategoriaScreen() {
   const [editados, setEditados] = useState({});
   const [montoEstimado, setMontoEstimado] = useState(0);
   const esIngreso = parseInt(id) === 1;
+  const [busqueda, setBusqueda] = useState('');
 
   useEffect(() => {
     const montoEstimado = obtenerGastoEsperado(id, periodo_id);
@@ -131,9 +132,16 @@ export default function CategoriaScreen() {
           />
         )}
 
+        <TextInput
+          style={styles.buscador}
+          placeholder="🔍 Buscar producto..."
+          placeholderTextColor="#94a3b8"
+          value={busqueda}
+          onChangeText={setBusqueda}
+        />
         {/* Lista de productos */}
         <FlatList
-          data={productos}
+           data={productos.filter(p => p.nombre.toLowerCase().includes(busqueda.toLowerCase()))}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
             <ProductoRow producto={item} periodo_id={periodo_id} onChange={handleCambio} onDelete={cargarProductos} />
@@ -151,6 +159,17 @@ export default function CategoriaScreen() {
 }
 
 const styles = StyleSheet.create({
+  buscador: {
+    borderWidth: 1,
+    borderColor: '#ffffff50',
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 15,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    backgroundColor: '#00000050',
+    color: '#ffffff',
+  },
   safe: {
     flex: 1,
     backgroundColor: '#d7dbdf',
