@@ -62,6 +62,11 @@ export default function ProductoRow({ producto, periodo_id, onChange, onDelete }
           <SelectorCantidadModal
             value={precio_unitario}
             pasos={[
+              { valor: -100, texto: '-100' },
+              { valor: -10, texto: '-10' },
+              { valor: 10, texto: '+10' },
+              { valor: 100, texto: '+100' },
+
               { valor: -10000, texto: '-10k' },
               { valor: -1000, texto: '-1k' },
               { valor: 1000, texto: '+1k' },

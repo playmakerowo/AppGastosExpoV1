@@ -25,6 +25,7 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
   const listaPasos = pasos ?? pasosDefault;
   const fila1 = listaPasos.slice(0, 4);
   const fila2 = listaPasos.slice(4, 8);
+  const fila3 = listaPasos.slice(8, 12);
 
   function ajustar(delta) {
     setGastoEsperado(prev => String(Math.max(0, (parseInt(prev) || 0) + delta)));
@@ -95,6 +96,16 @@ export default function GastoEsperadoModal({ categoria_id, periodo_id, onActuali
               </View>
             )}
 
+            {fila3.length > 0 && (
+              <View style={styles.fila}>
+                {fila3.map((p) => (
+                  <TouchableOpacity key={p.texto} style={styles.btn} onPress={() => ajustar(p.valor)}>
+                    <Text style={styles.btnText}>{p.texto}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
             <TouchableOpacity style={styles.btnConfirmar} onPress={guardar}>
               <Text style={styles.btnConfirmarText}>Guardar</Text>
             </TouchableOpacity>
@@ -149,6 +160,11 @@ const styles = StyleSheet.create({
     color: '#6366f1',
     textAlign: 'center',
     width: '100%',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 6,
+    minWidth: '100%',
+    textAlign: 'center'
   },
   fila: {
     flexDirection: 'row',

@@ -20,6 +20,7 @@ export default function SelectorCantidadModal({ value, onChange, esDinero, pasos
   const listaPasos = pasos ?? pasosDefault;
   const fila1 = listaPasos.slice(0, 4);
   const fila2 = listaPasos.slice(4, 8);
+  const fila3 = listaPasos.slice(8, 12);
   const [modalVisible, setModalVisible] = useState(false);
   const [cantidadOriginal, setcantidadOriginal] = useState(value ?? 0);
   const [cantidad, setCantidad] = useState(value ?? 0);
@@ -102,6 +103,15 @@ export default function SelectorCantidadModal({ value, onChange, esDinero, pasos
               </View>
             )}
 
+            {fila3.length > 0 && (
+              <View style={styles.fila}>
+                {fila3.map((p) => (
+                  <TouchableOpacity key={p.texto} style={styles.btn} onPress={() => ajustar(p.valor)}>
+                    <Text style={styles.btnText}>{p.texto}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
             <TouchableOpacity style={styles.btnConfirmar} onPress={confirmar}>
               <Text style={styles.btnConfirmarText}>Confirmar</Text>
             </TouchableOpacity>
@@ -152,6 +162,11 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: '800',
     color: '#6366f1',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 6,
+    minWidth: '100%',
+    textAlign: 'center'
   },
   fila: {
     flexDirection: 'row',

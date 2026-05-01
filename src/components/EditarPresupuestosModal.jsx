@@ -68,6 +68,11 @@ export default function EditarPresupuestos({ periodo_id, onActualizado }) {
                           value={item.monto_esperado}
                           esDinero={true}
                           pasos={[
+                            { valor: -100, texto: '-100' },
+                            { valor: -10, texto: '-10' },
+                            { valor: 10, texto: '+10' },
+                            { valor: 100, texto: '+100' },
+
                             { valor: -10000, texto: '-10k' },
                             { valor: -1000, texto: '-1k' },
                             { valor: 1000, texto: '+1k' },
