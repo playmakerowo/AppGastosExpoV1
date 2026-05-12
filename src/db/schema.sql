@@ -13,13 +13,13 @@ CREATE TABLE IF NOT EXISTS periodos (
 
 CREATE TABLE IF NOT EXISTS categorias (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nombre TEXT NOT NULL,
+  nombre TEXT NOT NULL UNIQUE,
   icono TEXT
 );
 
 CREATE TABLE IF NOT EXISTS productos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nombre TEXT NOT NULL,
+  nombre TEXT NOT NULL UNIQUE,
   categoria_id INTEGER,
   FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );

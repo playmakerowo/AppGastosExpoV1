@@ -2,6 +2,16 @@ import { getDB } from '../database';
 
 export function crearCategoria(nombre, icono) {
   const db = getDB();
+
+  const existe = db.getFirstSync(
+    'SELECT id FROM categorias WHERE UPPER(nombre) = UPPER(?)',
+    [nombre]
+  );
+
+  if (existe) {
+    throw new Error(`La categoría "${nombre}" ya existe`);
+  }
+
   const result = db.runSync(
     'INSERT INTO categorias (nombre, icono) VALUES (?, ?)',
     [nombre, icono]
