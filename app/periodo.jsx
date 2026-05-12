@@ -103,7 +103,7 @@ export default function PeriodoScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
       <ImageBackground
-        source={require('../assets/wallpaper.gif')}
+        source={require('../assets/wallpaper.jpg')}
         style={styles.safe}
       >
         <FlatList
@@ -178,18 +178,19 @@ const styles = StyleSheet.create({
   mesTexto: { fontSize: 16, fontWeight: '500', color: '#ffffff', },
 
   badge: {
-    backgroundColor: '#c2bebe',
+    backgroundColor: '#b916eb',
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 20,
     fontSize: 12,
+    color: '#fff'
   },
 
   vacio: { textAlign: 'center', marginTop: 40 },
 
   btnNuevo: {
     margin: 16,
-    backgroundColor: '#6365f1d3',
+    backgroundColor: '#4548e7e1',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',

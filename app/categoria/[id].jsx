@@ -68,7 +68,7 @@ export default function CategoriaScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
       <ImageBackground
-        source={require('../../assets/wallpaper.gif')}
+        source={require('../../assets/wallpaper.jpg')}
         style={styles.safe}
       >
         <View style={[styles.resumenCard, sobre && !esIngreso && styles.resumenRojo]}>
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   },
   resumenCard: {
     flexDirection: 'row',
-    backgroundColor: '#222121b7',
+    backgroundColor: '#222121e1',
     margin: 8,
     borderRadius: 14,
     paddingVertical: 16,

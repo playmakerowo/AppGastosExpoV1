@@ -171,7 +171,7 @@ export default function HomeScreen() {
     <SafeAreaView style={styles.safe} edges={['left', 'right', 'bottom']}>
 
       <ImageBackground
-        source={require('../assets/wallpaper.gif')}
+        source={require('../assets/wallpaper.jpg')}
         style={styles.safe}
       >
         <View style={styles.header}>
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#6365f1d3',
+    backgroundColor: '#4548e7e1',
     paddingVertical: 14,
     paddingHorizontal: 8,
   },
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   periodoNombre: { fontSize: 18, fontWeight: '700', color: '#fff' },
   totalesCard: {
     flexDirection: 'row',
-    backgroundColor: '#222121b7',
+    backgroundColor: '#222121e1',
     margin: 8,
     borderRadius: 14,
     paddingVertical: 16,

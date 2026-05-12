@@ -177,7 +177,7 @@ export default function ReportesModal({ datos, periodo_id }) {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#6365f1d3',
+        backgroundColor: '#4548e7e1',
         padding: 12,
         borderRadius: 10,
         alignItems: 'center',

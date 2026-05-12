@@ -94,7 +94,7 @@ export default function ProductoRow({ producto, periodo_id, onChange, onDelete }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#2c2c2cd2',
+    backgroundColor: '#2c2c2cde',
     borderRadius: 10,
     padding: 12,
     marginBottom: 6,
