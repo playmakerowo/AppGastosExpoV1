@@ -2,6 +2,16 @@ import { getDB } from '../database';
 
 export function crearProducto(nombre, categoria_id) {
   const db = getDB();
+
+  const existe = db.getFirstSync(
+    'SELECT id FROM productos WHERE UPPER(nombre) = UPPER(?)',
+    [nombre]
+  );
+
+  if (existe) {
+    throw new Error(`El producto "${nombre}" ya existe`);
+  }
+
   const result = db.runSync(
     'INSERT INTO productos (nombre, categoria_id) VALUES (?, ?)',
     [nombre, categoria_id]
